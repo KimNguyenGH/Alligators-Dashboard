@@ -1,0 +1,61 @@
+---
+title: "Alligators' Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(plotly)
+
+library(tidyverse)
+library(scales)
+library(tidytext)
+library(wordcloud)
+library(textdata)
+
+library(gbm)
+library(vip)
+library(kableExtra)
+library(tm)
+library(topicmodels)
+library(reshape2)
+library(ggplot2)
+library(pals)
+
+library(quanteda)
+library(seededlda)
+library(newsmap)
+library(maps)
+library(LSX)
+library(quanteda.textstats)
+library(quanteda.textplots)
+library(SnowballC)
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+
+```
+
+### Chart C
+
+```{r}
+
+```
+
