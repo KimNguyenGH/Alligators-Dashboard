@@ -109,6 +109,50 @@ graph2 <-
   ggtitle("2021 COVID-19 Tweets Word Frequency")
   )
 
+#added - common words by proportion
+
+compare_most_common <- full_join(twenty_most_common, twentyone_most_common, by = "word")
+
+colnames(compare_most_common) <- c("Word", "2020", "2021")
+
+# most common words by proportion 2020
+compare_most_common %>%  mutate(`2020 proportion` = compare_most_common$`2020`/4666) -> prp_twenty_most_common
+
+prp_twenty_most_common[!is.na(prp_twenty_most_common$`2020 proportion`),] -> prp_twenty_most_common
+
+prp_twenty_most_common %>%  select("Word",`2020 proportion`) %>% arrange(-`2020 proportion`) -> prp_twenty_most_common
+
+# most common words by proportion 2021
+
+compare_most_common %>%  mutate(`2021 proportion` = compare_most_common$`2021`/5341) -> prp_twentyone_most_common
+
+prp_twentyone_most_common[!is.na(prp_twentyone_most_common$`2021 proportion`),] -> prp_twentyone_most_common
+
+prp_twentyone_most_common %>%  select("Word",`2021 proportion`) %>% arrange(-`2021 proportion`) -> prp_twentyone_most_common
+
+#graph
+
+prpgraph_twenty_most_common <-
+  ggplotly( 
+  prp_twenty_most_common %>%
+  ggplot(aes(x = Word, y = `2020 proportion`)) +
+  geom_bar(stat = "identity" , fill="#1DA1F2") +
+  ylab("Frequency") +
+  coord_flip() + 
+  ggtitle("2020 COVID-19 Tweets Word Frequency By Proportion")
+  )
+
+prpgraph_twentyone_most_common <-
+  ggplotly( 
+  prp_twentyone_most_common %>%
+  ggplot(aes(x = Word, y = `2021 proportion`)) +
+  geom_bar(stat = "identity", fill="#1DA1F2") +
+  ylab("Frequency") +
+  coord_flip() + 
+  ggtitle("2021 COVID-19 Tweets Word Frequency By Proportion")
+  )
+  
+## 
 twenty_cloud <- 
   twenty_words  %>% 
   count(word) %>% 
@@ -701,9 +745,17 @@ Examining Original Tweets {.storyboard}
 ```{r}
 browsable(div(
   style = "display: flex; flex-wrap: wrap; justify-content: center",
-  div(graph1, style = "width: 100%;"),
+  div(prpgraph_twenty_most_common, style = "width: 50%;"),
   tags$br(),
-  div(graph2, style = "width: 100%;"),
+  div(prpgraph_twentyone_most_common, style = "width: 50%;"),
+  p("---")
+))
+
+browsable(div(
+  style = "display: flex; flex-wrap: wrap; justify-content: center",
+  div(graph1, style = "width: 50%;"),
+  tags$br(),
+  div(graph2, style = "width: 50%;"),
   p("---")
 ))
 ```
