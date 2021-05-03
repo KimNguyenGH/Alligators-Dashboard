@@ -1394,9 +1394,13 @@ Let's see if using sentiments, mean AFINN score, and topic-specific words, we ca
 
 We are not interested in knowing the predictive efficacy or goodness of fit of the random forests model. We only want to know, out of the features we have selected, which seem the most important to predicting virality. As such, we display variable importance plots for each model and use these for interpretation.
 
+According to our random forests model, the most predictive variables are positive sentiments, disgust, and the words "sick," "hoax," and "country" in all of its variations.
+
 Because the model is predicting both high and low values, the sign of each predictor (positive or negative effect on virality) is unclear. However, we would surmise that features with a strong positive effect would be the most likely to be selected given that most of the variation is positive.
 
 However, because we can't be sure about this, we build a simple backward stepwise linear regression (optimized on AIC) to determine which effects were positive and which were likely negative.
+
+It appears that using the word "hoax" predicts a substantial increase in virality---to the tune of over five retweets per follower. The AFINN variable has a negative coefficient, which implies that more positive tweets go less viral. Confusingly, the opposite effect is seen with the joy sentiment. Perhaps joy denotes something more specific than a positive AFINN score would imply. Surprise sentiments predict less virality, and, for whatever reason, the use of the word "gonna" predicts a substantial increase in virality.
 
 ### What textual features (sentiments and words) predict how viral a tweet became in 2021?
 
@@ -1425,4 +1429,6 @@ browsable(div(
 
 ***
 
-something
+For our 2021 random forests model, the word "take" was the most predictive, followed by positive sentiments, trust sentiments, anger, surprise, fear and joy. It seems that particular words were much less predictive on 30 Mar 2021. Perhaps this means that there are fewer "hot topics," so mood is our best way to finger the pulse now relative to early in the pandemic.
+
+Again, we also produce a backward stepwise regression, which confirms the predictive significance of the word "take" and shows that it predicts more retweets per follower. Positive sentiments, fear, and joy predict less virality, whereas trust predicts more.
