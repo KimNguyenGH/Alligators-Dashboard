@@ -241,6 +241,51 @@ graph6 <-
   labs(y="count", title="30 Mar 2021 Sentiment Words")
   )
 
+# sentiment breakdown
+
+twenty_sentiment_analysis2 %>%
+  ggplot(aes(x=n, y=1, label=word)) + 
+  facet_grid(~sentiment) + 
+  geom_point(color = "transparent") + 
+  geom_text(aes(color=sentiment)) +
+  theme(panel.grid = element_blank(), 
+        axis.text.x = element_blank(),
+        panel.border = element_rect("lightgray", fill = NA),
+        legend.position = "none",
+        plot.title = element_text(hjust = 0.5, face="bold", size=17, 
+                                  lineheight = 0.9),
+        axis.title = element_text(face="bold",size = (12))) + 
+  xlab("Count") + ylab("Words") +
+  ggtitle("2020 Sentiment Breakdown") + 
+  coord_flip()  -> twenty_sentiment_analysis4
+
+ggplotly(twenty_sentiment_analysis4, 
+         tooltip=c("sentiment","word","n")) ->  twenty_sentiment_analysis4
+
+twenty_sentiment_analysis4
+
+twentyone_sentiment_analysis2 %>%
+  ggplot(aes(x=n, y=1, label=word)) + 
+  facet_grid(~sentiment) + 
+  geom_point(color = "transparent") + 
+  geom_text(aes(color=sentiment)) +
+  theme(panel.grid = element_blank(), 
+        axis.text.x = element_blank(),
+        panel.border = element_rect("lightgray", fill = NA),
+        legend.position = "none",
+        plot.title = element_text(hjust = 0.5, face="bold", size=17, 
+                                  lineheight = 0.9),
+        axis.title = element_text(face="bold",size = (12))) + 
+  xlab("Count") + ylab("Words") +
+  ggtitle("2021 Sentiment Breakdown") + 
+  coord_flip() -> twentyone_sentiment_analysis4
+
+ggplotly(twentyone_sentiment_analysis4, 
+         tooltip=c("sentiment","word","n")) ->  twentyone_sentiment_analysis4
+
+twentyone_sentiment_analysis4
+
+
 afinn <- read_csv('afinn.csv')
 
 twenty_afinn <-    
@@ -826,6 +871,24 @@ We joined the NRC Word-Emotion Association Lexicon to our data, which alloweds u
 We produce visualizations comparing the sentiments being expressed in each sample period.
 
 Compared to our 2020 tweets, the 2021 tweets express less trust, less surprise, more sadness, more positivity, less joy, more fear, less disgust, less anticipation, and less anger.
+
+
+### What words are associated with the different sentiments between the two periods?
+
+```{r }
+browsable(div(
+  style = "display: flex; flex-wrap: wrap; justify-content: center",
+  div(twenty_sentiment_analysis4, style = "width: 50%; height:600px"),
+  tags$br(),
+  div(twentyone_sentiment_analysis4, style = "width: 50%;"),
+  p("---")
+))
+
+```
+
+***
+I will update this.
+
 
 ### How positive vs. negative are the tweets from each year?
 
