@@ -145,7 +145,7 @@ prpgraph_twenty_most_common <-
 prpgraph_twentyone_most_common <-
   ggplotly( 
   prp_twentyone_most_common %>%
-  ggplot(aes(x = Word, y = `2021 proportion`)) +
+  ggplot(aes(x = reorder(Word, `2021 proportion`), y = (`2021 proportion`)) ) +
   geom_bar(stat = "identity", fill="#1DA1F2") +
   ylab("Frequency") +
   coord_flip() + 
