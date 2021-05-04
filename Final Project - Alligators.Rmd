@@ -188,14 +188,15 @@ twenty_sentiment_analysis <-
 
 graph3 <- 
   ggplotly(
-  twenty_sentiment_analysis %>%  
-  top_n(15) %>% 
-  ggplot(aes(x = sentiment, y = n )) +
-  geom_bar(stat = "identity") +
-  coord_flip() +
-  ylab("Frequency") +
-  xlab("Sentiment") +
-  labs(title="30 Mar 2020 Sentiments")
+    twenty_sentiment_analysis %>% 
+      ungroup() %>% 
+      top_n(15) %>% 
+      ggplot(aes(x = sentiment, y = n )) +
+      geom_bar(stat = "identity") +
+      coord_flip() +
+      ylab("Frequency") +
+      xlab("Sentiment") +
+      labs(title="30 Mar 2020 Sentiments")
   )
 
 twentyone_sentiment_analysis <- 
@@ -205,14 +206,15 @@ twentyone_sentiment_analysis <-
 
 graph4 <-
   ggplotly(
-  twentyone_sentiment_analysis %>%  
-  top_n(15) %>% 
-  ggplot(aes(x = sentiment, y = n )) +
-  geom_bar(stat = "identity") +
-  coord_flip() +
-  ylab("Frequency") +
-  xlab("Sentiment") +
-  labs(title="30 Mar 2021 Sentiments")
+    twentyone_sentiment_analysis %>%
+      top_n(15) %>% 
+      ungroup() %>%
+      ggplot(aes(x = sentiment, y = n )) +
+      geom_bar(stat = "identity") +
+      coord_flip() +
+      ylab("Frequency") +
+      xlab("Sentiment") +
+      labs(title="30 Mar 2021 Sentiments")
   )
 
 twenty_sentiment_analysis %>% filter(!sentiment %in% c("positive", "negative")) %>% 
@@ -221,11 +223,11 @@ twenty_sentiment_analysis %>% filter(!sentiment %in% c("positive", "negative")) 
 
 graph5 <-
   ggplotly(
-  ggplot(twenty_sentiment_analysis2, aes(x=word, y=n, fill = n)) +
-  facet_wrap(~ sentiment, scales = "free")+ 
-  geom_bar(stat ="identity") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
-  labs(y="count", title="30 Mar 2020 Sentiment Words")
+    ggplot(twenty_sentiment_analysis2, aes(x=word, y=n, fill = n)) +
+    facet_wrap(~ sentiment, scales = "free")+ 
+    geom_bar(stat ="identity") +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+    labs(y="count", title="30 Mar 2020 Sentiment Words")
   )
 
 twentyone_sentiment_analysis %>% filter(!sentiment %in% c("positive", "negative")) %>% 
