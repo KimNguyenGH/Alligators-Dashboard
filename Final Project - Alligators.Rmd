@@ -1472,7 +1472,7 @@ The 2021 retweets appear to be more negatively valenced.
 ### What textual features (sentiments and words) predict how viral a tweet became in 2020?
 
 ```{r}
-vip(rf_model20, num_features = 25) + 
+vip(rf_model20, num_features = 25, aesthetics = list(fill = "firebrick")) + 
   ggtitle('GBM - 30 Mar 2020 Variable Importance for Virality') -> vip_rf20
 
 library(MASS)
@@ -1488,7 +1488,7 @@ step.model <- stepAIC(full.model, direction = "backward",
 tab_model(step.model)$knitr %>% HTML() -> stepmodel20
 
 
-vip(rf_model21, num_features = 25) + 
+vip(rf_model21, num_features = 25, aesthetics = list(fill = "firebrick")) + 
   ggtitle('GBM - 30 Mar 2021 Variable Importance for Virality') -> vip_rf21
 
 twentyone_vars <- importance(rf_model21) %>% as.data.frame() %>% rownames_to_column() %>% arrange(desc(.))
