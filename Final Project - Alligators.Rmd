@@ -1,6 +1,5 @@
 ---
-title: "Analyzing COVID-19 Tweets from Mar 2020 & 2021"
-author: "A. Plumber, E. Lin, K. Nguyen, R. Karbowicz, M. Aines"
+title: "COVID-19 Tweets in Mar 2020 & 2021"
 output: flexdashboard::flex_dashboard
 ---
 
@@ -827,10 +826,42 @@ rf_model21 <- ranger(
 )
 ```
 
-I. Introduction {.storyboard}
+
+I. Introduction
 =========================================
 
-***A: Research questions***
+```{r, echo = FALSE}
+h2("Authors and Acknowledgments")
+```
+
+
+Authors: Ammar Plumber, Elaina Lin, Kim Nguyen, Ryan Karbowicz, and Meghan Aines
+
+This website was produced as a final project for _BDS 516: Data Science and Quantitative Modeling_, a graduate course taught by Alex Shpenev at the University of Pennsylvania.
+
+The tweets that we use in this analysis were obtained from the following GitHub repository by Emily Chen, a computer science Ph.D. student at USC: https://github.com/echen102/COVID-19-TweetIDs
+
+
+```{r, echo = FALSE}
+h2("A. Motivation")
+```
+
+
+COVID-19 has wreaked unprecedented havoc around the world. From a data analytics perspective, never before has a pandemic occurred during a time in history when almost any human can publically share their thoughts on a global platform. More specifically, Twitter offers real-time insight on the attitudes, beliefs and general moods of a populace. In this analysis, we compare the sentiments of COVID-19 related tweets at the beginning of the pandemic on March 30, 2020, to the sentiments exactly one year later on March 30, 2021. We select this time frame to capture two of the key events during this pandemic, the onset of stay-at-home orders and vaccine availability.  As opposed to other data collection methods, such as interviews and surveys (and the numerous response biases that come along with them), sentiment analysis through Twitter is better able to capture the raw and unfiltered emotions of people who feel the need to express their views.
+
+By gaining a better understanding of the general sentiment of a given population, policy leaders can become better informed regarding how to more effectively govern people during times of crisis. For instance, if feelings of fear are high, politicians can offer words of reassurance to instill feelings of calmness and ease. Or, if feelings of trust are low, politicians can attempt to mend the public trust by strengthening accountability and transparency within the government. At the end of the day, essentially any policy decision can be better informed by knowing how the general populace feels about the issue at hand. 
+
+We also examine which COVID-19 topics are most talked about.  Similar to sentiment analysis, topic analysis can help inform policy leaders about which topics garner the most interest and need to be addressed. For instance, in the case of COVID-19, if a popular topic is the lack of ventilators, a good policy leader would be wise to offer updates on the distribution, as well as the known efficacy of ventilators.
+
+We also examine differences in geographic attention between the two dates.  More specifically, we look at how often each country is mentioned in each sample period, as well as which words are associated with each country. In the case of COVID-19, this information can be very helpful in terms of gaining a better understanding of general attitudes towards China. Because the coronavirus originated in Wuhan, China, people around the world have unfortunately expressed negative sentiment towards Chinese people. Gaining a better understanding of how these attitudes have changed over time can help inform policy leaders as to whether or not extra measures need to be taken to protect and defend people of Chinese origin.
+
+Lastly, we examine which features are most predictive of how many retweets a tweet gets. In general, it is believed that social media posts with more extreme positive/negative valence tend to be more likely to go viral. In fact, the best selling author Seth Godin has remarked that ”One of the problems with social media is that the stronger the view you express, the more likely it will become amplified”.  By examining the kinds of sentiments associated with more viral tweets, as well as the sources of these tweets and the textual elements of the tweets, we can either confirm or disconfirm this common belief. The results that we find can help inform policy leaders about how to craft tweets containing very important information in a way that maximizes the likelihood that a large number of people will be exposed to the important information. This analysis will also provide valuable insight regarding how the virality of tweets has changed over time, so that policy leaders can adjust their approaches to the climate of the times.
+
+
+```{r, echo = FALSE}
+h2("B. Research Questions")
+```
+
 
 1. Are there differences in sentiments between the two sample periods—both in original tweets and in retweets?
 
@@ -843,32 +874,25 @@ I. Introduction {.storyboard}
 5. Are there certain sentiments or topic-specific words that are most likely to attract retweets?
 
 
-***B: Motivation***
-
-Covid-19 has wreaked unprecedented havoc around the world. From a data analytics perspective, never before has a pandemic occurred during a time in history when almost any human can publically share their thoughts on a global platform. More specifically, Twitter offers real-time insight on the attitudes, beliefs and general moods of a populace. In this analysis, we compare the sentiments of Covid-19 related tweets at the beginning of the pandemic on March 30, 2020, to the sentiments exactly one year later on March 30, 2021. We select this time frame to capture two of the key events during this pandemic, the onset of stay-at-home orders and vaccine availability.  As opposed to other data collection methods, such as interviews and surveys (and the numerous response biases that come along with them), sentiment analysis through Twitter is better able to capture the raw and unfiltered emotions of people who feel the need to express their views.
-
-By gaining a better understanding of the general sentiment of a given population, policy leaders can become better informed regarding how to more effectively govern people during times of crisis. For instance, if feelings of fear are high, politicians can offer words of reassurance to instill feelings of calmness and ease. Or, if feelings of trust are low, politicians can attempt to mend the public trust by strengthening accountability and transparency within the government. At the end of the day, essentially any policy decision can be better informed by knowing how the general populace feels about the issue at hand. 
-
-We also examine which Covid-19 topics are most talked about.  Similar to sentiment analysis, topic analysis can help inform policy leaders about which topics garner the most interest and need to be addressed. For instance, in the case of Covid-19, if a popular topic is the lack of ventilators, a good policy leader would be wise to offer updates on the distribution, as well as the known efficacy of ventilators.
-
-We also examine differences in geographic attention between the two dates.  More specifically, we look at how often each country is mentioned in each sample period, as well as which words are associated with each country. In the case of Covid-19, this information can be very helpful in terms of gaining a better understanding of general attitudes towards China. Because the coronavirus originated in Wuhan, China, people around the world have unfortunately expressed negative sentiment towards Chinese people. Gaining a better understanding of how these attitudes have changed over time can help inform policy leaders as to whether or not extra measures need to be taken to protect and defend people of Chinese origin.
-
-Lastly, we examine which features are most predictive of how many retweets a tweet gets. In general, it is believed that social media posts with more extreme positive/negative valence tend to be more likely to go viral. In fact, the best selling author Seth Godin has remarked that ”One of the problems with social media is that the stronger the view you express, the more likely it will become amplified”.  By examining the kinds of sentiments associated with more viral tweets, as well as the sources of these tweets and the textual elements of the tweets, we can either confirm or disconfirm this common belief. The results that we find can help inform policy leaders about how to craft tweets containing very important information in a way that maximizes the likelihood that a large number of people will be exposed to the important information. This analysis will also provide valuable insight regarding how the virality of tweets has changed over time, so that policy leaders can adjust their approaches to the climate of the times.
 
 
-
-II. Methods {.storyboard}
+II. Methods
 =========================================
+
+```{r, echo = FALSE}
+h2("Methods")
+```
+
 
 To examine the differences in sentiment between March 30, 2020 and March 31, 2021, we use sentiment analysis through text mining in R and use several methods to visualize and interpret the different aspects of the tweet, including length, content, and source. We use random forests model and backward stepwise regression to predict the virality of the tweets based on selected variables.
 
-First, we used tidytext and transformed the dataset of Covid-19 related tweets and retweets for sentiment analysis. We manipulate the text with dplyr for further text analysis to determine the frequency of words in the tweets, tweet lengths, common hashtags, and mentions. To conduct further analyses, we use statistical methods to determine the significance in different mean tweet lengths.
+First, we used tidytext and transformed the dataset of COVID-19 related tweets and retweets for sentiment analysis. We manipulate the text with dplyr for further text analysis to determine the frequency of words in the tweets, tweet lengths, common hashtags, and mentions. To conduct further analyses, we use statistical methods to determine the significance in different mean tweet lengths.
 
 Then, we use sentiment analysis to further examine the difference between the two periods in sentiments and word choice. We joined the NRC Word-Emotion Association Lexicon to our data. Doing so allowed us to classify the words with basic emotions and sentiments, providing us an overall picture of the tweet sentiments. 
 
 To rate the valence of the words, we joined the AFINN sentiment lexicon, which attributed a score based on emotional valence. The scores provided a more objective comparison of tweets and retweets between the two periods.
 
-Next, we use the quanteda package for topic modeling to examine prevalent topics and discussions. This algorithm determines the clusters of words that are likely to be associated, thus defining the topics. Topic modelling provides us insight as to the different conversations associated with Covid-19 people are having during this period.
+Next, we use the quanteda package for topic modeling to examine prevalent topics and discussions. This algorithm determines the clusters of words that are likely to be associated, thus defining the topics. Topic modelling provides us insight as to the different conversations associated with COVID-19 people are having during this period.
 
 We use the packcircles package to see which account was the most followed and getting retweeted on those days. Packcircles allowed us to visualize the comparisons between the different accounts.
 
@@ -876,7 +900,7 @@ To predict the virality of a tweet, we use the sentiments, mean AFINN score, and
 
 
 
-III. A) Results: Analyzing Original Tweets {.storyboard}
+III. Original Tweets {.storyboard}
 =========================================
 
 ### What words appear most frequently in tweets from each sample period? 
@@ -1102,7 +1126,7 @@ browsable(div(
 
 ***
 
-In 2020, the most popular hashtags, of course, are #covid19 and #coronavirus, but after these, the hot topics seem to be political topics (#gapol, #flapol, #scpolitics, #boycotttrumppressconferences) and social distancing messaging (#stayhome, #socialdistancing, #quarantinelife, #flattenthecurve).
+In 2020, the most popular hashtags, of course, are #COVID19 and #coronavirus, but after these, the hot topics seem to be political topics (#gapol, #flapol, #scpolitics, #boycotttrumppressconferences) and social distancing messaging (#stayhome, #socialdistancing, #quarantinelife, #flattenthecurve).
 
 In 2021, some of the most popular hashtags are anti-CCP, seemingly driven by the theory that China developed/released the virus intentionally. Dr. Li-Meng Yan is one of the key conveyors of this theory, as you can see on her Twitter page: https://twitter.com/DrLiMengYAN1
 
@@ -1217,7 +1241,7 @@ The China discussion still centers on theories about the origin of COVID-19, wit
 THe UK mentions occur in the contexts of relations with the EU, worries about a new strain, and the Johnson & Johnson vaccine. Concerning Canada, we see talks of the AstraZeneca vaccine, which recently rolled out there. The other words listed are less easy to interpret.
 
 
-III. B) Results: Analyzing Retweets {.storyboard}
+IV. Analyzing Retweets {.storyboard}
 =========================================
 
 ### Which are the most followed accounts being retweeted in our sample?
@@ -1618,10 +1642,14 @@ For our 2021 random forests model, the word "take" was the most predictive, foll
 
 Again, we also produce a backward stepwise regression, which confirms the predictive significance of the word "take" and shows that it predicts more retweets per follower. Positive sentiments, fear, and joy predict less virality, whereas trust predicts more.
 
-<<<<<<< HEAD
 
-IV. Conclusion {.storyboard}
+
+V. Conclusion
 =========================================
+
+```{r, echo = FALSE}
+h2("Conclusion")
+```
 
 
 By examining tweets from these two dates, we were able to uncover a trove of insights about how COVID-19 communications have changed—both in sentiments and in content. We see that focus on China has abated slightly. Similarly, the topics that people are discussing have changed. Conversations about lockdown are less prevalent, and political discussions have changed as well. The kinds of tweets going viral (getting heavily retweeted) differ substantially between the two years. In fact, the average number of retweets has itself shifted dramatically, with much fewer retweets overall in 2021. While the presence of particular words cann’t by itself predict how viral a tweet is, there are clear patterns about which words attracted attention during each time.
@@ -1630,10 +1658,10 @@ In developing a machine-learning algorithm, we can assist political leaders in c
 
 
 
-***Limitations***
+```{r, echo = FALSE}
+h2("Limitations")
+```
 
 First, we ultimately compared one day of tweets to another day of tweets one year later. While this computation already consumed a massive amount of computational power and memory, a more robust analysis might have compared a full week or even a month of tweets to another week or month of tweets. Because we only analyzed one day of tweets, there is a chance that our analysis could be capturing idiosyncratic variation for a given day rather than the general underlying sentiment of a prolonged time period.  It goes without saying, however, that a full day of tweets is certainly more robust than one hour (or even one minute) of tweets.
 
 Second, in this analysis, only certain kinds of people are drawn to Twitter, so Twitter analysis does not necessarily offer an accurate representation of how the population feels as a whole.  More outspoken and extroverted people are more likely to express their views on Twitter, which leads to the underrepresentation of more soft spoken and introverted people. Therefore, this Twitter Analysis would be best utilized in combination with other data collection and analysis methods.
-=======
->>>>>>> 8ad6f529277eef7a56c9b63fb3adc46d6ce44e93
