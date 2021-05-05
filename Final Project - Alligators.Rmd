@@ -964,6 +964,7 @@ HTML(ggplot_image(twentyone_sentiment_analysis3, height = px(650)))
 ```
 
 ***
+
 Looking at both the 2020 and 2021 sentiments, we can see that the words "pandemic" have been the most used word, but with different frequency. In 2021, other words started to gain in similar popularity as the word "pandemic", with negatively valenced words such as "bad" and "shit", and positively valenced words such as "hope" and "love". This is interesting to note because it demonstrates that after a year, people are exhibiting heightened emotions, most likely from exhaustion in dealing with the pandemic. These sentiments indicate people's expression when it comes to coping with the pandemic.
 
 
