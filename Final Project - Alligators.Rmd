@@ -866,7 +866,7 @@ browsable(div(
 
 
 ***
-We joined the NRC Word-Emotion Association Lexicon to our data, which alloweds us to identify words associated with eight basic emotions (anger, fear, anticipation, trust, surprise, sadness, joy, and disgust) and two sentiments (negative and positive).
+We joined the NRC Word-Emotion Association Lexicon to our data, which allowed us to identify words associated with eight basic emotions (anger, fear, anticipation, trust, surprise, sadness, joy, and disgust) and two sentiments (negative and positive).
 
 We produce visualizations comparing the sentiments being expressed in each sample period.
 
