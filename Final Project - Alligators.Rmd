@@ -136,20 +136,22 @@ prpgraph_twenty_most_common <-
   ggplotly( 
   prp_twenty_most_common %>%
   ggplot(aes(x = Word, y = `2020 proportion`)) +
-  geom_bar(stat = "identity" , fill="#1DA1F2") +
-  ylab("Frequency") +
+  geom_bar(stat = "identity" , fill="firebrick") +
+  xlab("word") +
+  ylab("Relative Frequency") +
   coord_flip() + 
-  ggtitle("2020 COVID-19 Tweets Word Frequency By Proportion")
+  ggtitle("2020 COVID-19 Tweets Words Rel. Freq.")
   )
 
 prpgraph_twentyone_most_common <-
   ggplotly( 
   prp_twentyone_most_common %>%
   ggplot(aes(x = reorder(Word, `2021 proportion`), y = (`2021 proportion`)) ) +
-  geom_bar(stat = "identity", fill="#1DA1F2") +
-  ylab("Frequency") +
+  geom_bar(stat = "identity", fill="firebrick") +
+  xlab("word") +
+  ylab("Relative Frequency") +
   coord_flip() + 
-  ggtitle("2021 COVID-19 Tweets Word Frequency By Proportion")
+  ggtitle("2021 COVID-19 Tweets Words Rel. Freq.")
   )
   
 ## 
@@ -188,14 +190,16 @@ twenty_sentiment_analysis <-
 
 graph3 <- 
   ggplotly(
-  twenty_sentiment_analysis %>%  
-  top_n(15) %>% 
-  ggplot(aes(x = sentiment, y = n )) +
-  geom_bar(stat = "identity") +
-  coord_flip() +
-  ylab("Frequency") +
-  xlab("Sentiment") +
-  labs(title="30 Mar 2020 Sentiments")
+    twenty_sentiment_analysis %>% 
+      summarize(sum(n)) %>% 
+      ungroup() %>% 
+      top_n(15) %>% 
+      ggplot(aes(x = sentiment, y = `sum(n)` )) +
+      geom_bar(stat = "identity", fill="firebrick") +
+      coord_flip() +
+      ylab("Frequency") +
+      xlab("Sentiment") +
+      labs(title="30 Mar 2020 Sentiments")
   )
 
 twentyone_sentiment_analysis <- 
@@ -205,14 +209,16 @@ twentyone_sentiment_analysis <-
 
 graph4 <-
   ggplotly(
-  twentyone_sentiment_analysis %>%  
-  top_n(15) %>% 
-  ggplot(aes(x = sentiment, y = n )) +
-  geom_bar(stat = "identity") +
-  coord_flip() +
-  ylab("Frequency") +
-  xlab("Sentiment") +
-  labs(title="30 Mar 2021 Sentiments")
+    twentyone_sentiment_analysis %>%
+      summarize(sum(n)) %>% 
+      ungroup() %>% 
+      top_n(15) %>% 
+      ggplot(aes(x = sentiment, y = `sum(n)` )) +
+      geom_bar(stat = "identity", fill="firebrick") +
+      coord_flip() +
+      ylab("Frequency") +
+      xlab("Sentiment") +
+      labs(title="30 Mar 2021 Sentiments")
   )
 
 twenty_sentiment_analysis %>% filter(!sentiment %in% c("positive", "negative")) %>% 
@@ -221,11 +227,11 @@ twenty_sentiment_analysis %>% filter(!sentiment %in% c("positive", "negative")) 
 
 graph5 <-
   ggplotly(
-  ggplot(twenty_sentiment_analysis2, aes(x=word, y=n, fill = n)) +
-  facet_wrap(~ sentiment, scales = "free")+ 
-  geom_bar(stat ="identity") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
-  labs(y="count", title="30 Mar 2020 Sentiment Words")
+    ggplot(twenty_sentiment_analysis2, aes(x=word, y=n, fill = n)) +
+    facet_wrap(~ sentiment, scales = "free")+ 
+    geom_bar(stat ="identity", fill="firebrick") +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+    labs(y="count", title="30 Mar 2020 Sentiment Words")
   )
 
 twentyone_sentiment_analysis %>% filter(!sentiment %in% c("positive", "negative")) %>% 
@@ -236,7 +242,7 @@ graph6 <-
   ggplotly(
   ggplot(twentyone_sentiment_analysis2, aes(x=word, y=n, fill = n)) +
   facet_wrap(~ sentiment, scales = "free")+ 
-  geom_bar(stat ="identity") +
+  geom_bar(stat ="identity", fill="firebrick") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
   labs(y="count", title="30 Mar 2021 Sentiment Words")
   )
@@ -792,16 +798,7 @@ browsable(div(
   style = "display: flex; flex-wrap: wrap; justify-content: center",
   div(prpgraph_twenty_most_common, style = "width: 50%;"),
   tags$br(),
-  div(prpgraph_twentyone_most_common, style = "width: 50%;"),
-  p("---")
-))
-
-browsable(div(
-  style = "display: flex; flex-wrap: wrap; justify-content: center",
-  div(graph1, style = "width: 50%;"),
-  tags$br(),
-  div(graph2, style = "width: 50%;"),
-  p("---")
+  div(prpgraph_twentyone_most_common, style = "width: 50%;")
 ))
 ```
 
@@ -820,12 +817,12 @@ print2nd <-
 
 hist1 <- 
   ggplotly(
-  ggplot(twenty_wordcounts, aes(x=tweetLength)) + geom_histogram() + labs(x = "Character Count") + ggtitle("30 Mar 2020 - Histogram of Tweet Lengths")
+  ggplot(twenty_wordcounts, aes(x=tweetLength)) + geom_histogram(fill="firebrick") + labs(x = "Character Count") + ggtitle("30 Mar 2020 - Histogram of Tweet Lengths")
   )
 
 hist2 <-
   ggplotly(
-  ggplot(twentyone_wordcounts, aes(x=tweetLength)) + geom_histogram() + labs(x = "Character Count") + ggtitle("30 Mar 2021 - Histogram of Tweet Lengths")
+  ggplot(twentyone_wordcounts, aes(x=tweetLength)) + geom_histogram(fill="firebrick") + labs(x = "Character Count") + ggtitle("30 Mar 2021 - Histogram of Tweet Lengths")
   )
 
 test <- t.test(x = twenty_wordcounts$tweetLength, 
@@ -837,9 +834,8 @@ ttest <- paste(capture.output(test), collapse = "<br>")
 browsable(div(
   style = "display: flex; flex-wrap: wrap; justify-content: center",
   p(print1st, tags$br(), print2nd, style = "width: 100%; border: dashed; color: black; font-family: sans-serif;"),
-  div(hist1, style = "width: 100%;"),
-  tags$br(),
-  div(hist2, style = "width: 100%;"),
+  div(hist1, style = "width: 50%;"),
+  div(hist2, style = "width: 50%;"),
   div(HTML(ttest), style = "width: 100%; border: dashed; color: black; font-family: sans-serif;")
 ))
 ```
@@ -857,10 +853,9 @@ The difference in mean tweet length is statistically significant, as p-value obt
 ```{r}
 browsable(div(
   style = "display: flex; flex-wrap: wrap; justify-content: center",
-  div(graph3, style = "width: 100%;"),
+  div(graph3, style = "width: 50%;"),
   tags$br(),
-  div(graph4, style = "width: 100%;"),
-  p("----")
+  div(graph4, style = "width: 50%;")
 ))
 ```
 
@@ -1032,7 +1027,7 @@ In 2021, some of the most popular hashtags are anti-CCP, seemingly driven by the
 ```{r}
 cntrymentions20 <-
   head(count20, 10) %>% as.data.frame() %>% 
-  ggplot(aes(x = Var1, y = Freq)) + geom_bar(stat = "identity") + labs(x = "country") +
+  ggplot(aes(x = Var1, y = Freq)) + geom_bar(stat = "identity", fill="firebrick") + labs(x = "country") +
   ggtitle("30 Mar 2020 Country Mentions")
 
 ggplot(dat_country20, aes(map_id = id)) +
@@ -1045,7 +1040,7 @@ ggplot(dat_country20, aes(map_id = id)) +
 
 cntrymentions21 <-
   head(count21, 10) %>% as.data.frame() %>% 
-  ggplot(aes(x = Var1, y = Freq)) + geom_bar(stat = "identity") + labs(x = "country") +
+  ggplot(aes(x = Var1, y = Freq)) + geom_bar(stat = "identity", fill="firebrick") + labs(x = "country") +
   ggtitle("30 Mar 2021 Country Mentions")
 
 ggplot(dat_country21, aes(map_id = id)) +
@@ -1057,14 +1052,12 @@ ggplot(dat_country21, aes(map_id = id)) +
   cntryplot21
 
 browsable(div(
-  h2("2020", style = "font-family: sans-serif"),
   style = "display: flex; flex-wrap: wrap;",
-  div(ggplotly(cntrymentions20), tags$br(), style = "width: 100%;"),
-  div(HTML(ggplot_image(cntryplot20, height = px(600))), style = "width: 100%; justify-content: center;"),
-  tags$br(),
-  h2("2021", style = "font-family: sans-serif"),
-  div(ggplotly(cntrymentions21), tags$br(), style = "width: 100%;"),
-  div(HTML(ggplot_image(cntryplot21, height = px(600))), style = "width: 100%; justify-content: center;")
+  div(ggplotly(cntrymentions20), style = "width: 50%;"),
+  div(ggplotly(cntrymentions21), tags$br(), style = "width: 50%;"),
+  div(HTML(ggplot_image(cntryplot20, height = px(600))), style = "width: 50%; justify-content: center;"),
+  div(HTML(ggplot_image(cntryplot21, height = px(600))), style = "width: 50%; justify-content: center;"),
+  p('---')
 ))
 ```
 
@@ -1166,10 +1159,11 @@ ggplot() +
   # General theme:
   theme_void() + 
   theme(legend.position="none") +
+  ggtitle('2020 Most Followers in Sample') +
   coord_equal() -> mostfollowers20
 
 mostfollowers21 <- 
-  twenty_rts %>% 
+  twentyone_rts %>% 
   group_by(ScreenName) %>% 
   summarize(Followers = mean(Followers)) %>% 
   arrange(desc(Followers)) %>%
@@ -1187,15 +1181,13 @@ ggplot() +
   # General theme:
   theme_void() + 
   theme(legend.position="none") +
+  ggtitle('2021 Most Followers in Sample') +
   coord_equal() -> mostfollowers21
 
 browsable(div(
   style = "display: flex; flex-wrap: wrap;",
-  h2("2020 Most Followers in Sample", style = "width: 100%; font-family: sans-serif;"),
-  div(ggplotly(mostfollowers20), tags$br(), style = "width: 100%;"),
-  h2("2021 Most Followers in Sample", style = "width: 100%; font-family: sans-serif;"),
-  div(ggplotly(mostfollowers21), style = "width: 100%;"),
-  p("---")
+  div(ggplotly(mostfollowers20), style = "width: 50%;"),
+  div(ggplotly(mostfollowers21), style = "width: 50%;")
 ))
 ```
 
@@ -1335,7 +1327,7 @@ twentyone_rts %>% group_by(ScreenName) %>%
 browsable(div(
   style = "display: flex; flex-wrap: wrap;",
   h2("2020", style = "width: 100%; font-family: sans-serif;"),
-  div(HTML(worstrt20), tags$br(), style = "width: 100%;"),
+  div(HTML(worstrt20), style = "width: 100%;"),
   h2("2021", style = "width: 100%; font-family: sans-serif;"),
   div(HTML(worstrt21), style = "width: 100%;")
 ))
@@ -1356,22 +1348,19 @@ Again, we see mostly news sites failing to get many retweets. There isn't anythi
 
 ```{r}
 table(twenty_rts_dfm$topic) %>% as.data.frame() %>% 
-  ggplot(aes(x = Var1, y = Freq)) + geom_bar(stat = "identity") + labs(x = "Topic Number") +
+  ggplot(aes(x = Var1, y = Freq)) + geom_bar(stat = "identity", fill="firebrick") + labs(x = "Topic Number") +
   ggtitle("30 Mar 2020 Topic Frequencies") ->
   rt_topics20
 
 table(twentyone_rts_dfm$topic) %>% as.data.frame() %>% 
-  ggplot(aes(x = Var1, y = Freq)) + geom_bar(stat = "identity") + labs(x = "Topic Number") +
+  ggplot(aes(x = Var1, y = Freq)) + geom_bar(stat = "identity", fill="firebrick") + labs(x = "Topic Number") +
   ggtitle("30 Mar 2021 Topic Frequencies") ->
   rt_topics21
 
 browsable(div(
   style = "display: flex; flex-wrap: wrap;",
-  h2("2020", style = "width: 100%; font-family: sans-serif;"),
-  div(ggplotly(rt_topics20), tags$br(), style = "width: 100%;"),
-  h2("2021", style = "width: 100%; font-family: sans-serif;"),
-  div(ggplotly(rt_topics21), style = "width: 100%;"),
-  p("---")
+  div(ggplotly(rt_topics20), style = "width: 50%;"),
+  div(ggplotly(rt_topics21), style = "width: 50%;")
 ))
 ```
 
@@ -1403,16 +1392,16 @@ writeLines(c(paste0("30 Mar 2020 Mean Retweeted Tweet Length: ",
   paste(collapse = "<br>") %>% 
   HTML() -> rt_lengths
 
-ggplot(data = twenty_rts_wordcounts, aes(x = tweetLength)) + geom_histogram() + ggtitle("30 Mar 2020 - Histogram of Tweet Length") -> rtlength20
+ggplot(data = twenty_rts_wordcounts, aes(x = tweetLength)) + geom_histogram(fill="firebrick") + ggtitle("30 Mar 2020 - Histogram of Tweet Length") -> rtlength20
 
-ggplot(data = twentyone_rts_wordcounts, aes(x = tweetLength)) + geom_histogram() + ggtitle("30 Mar 2021 - Histogram of Tweet Length") -> rtlength21
+ggplot(data = twentyone_rts_wordcounts, aes(x = tweetLength)) + geom_histogram(fill="firebrick") + ggtitle("30 Mar 2021 - Histogram of Tweet Length") -> rtlength21
 
 browsable(div(
   style = "display: flex; flex-wrap: wrap;",
-  p(rt_lengths, tags$br(), style = "width: 100%; font-family: sans-serif; border: dashed"),
-  div(ggplotly(rtlength20), tags$br(), style = "width: 100%;"),
+  div(ggplotly(rtlength20), style = "width: 50%;"),
+  div(ggplotly(rtlength21), style = "width: 50%;"),
   tags$br(),
-  div(ggplotly(rtlength21), style = "width: 100%;")
+  p(rt_lengths, tags$br(), style = "width: 100%; font-family: sans-serif; border: dashed")
 ))
 ```
 
@@ -1427,19 +1416,21 @@ It seems the difference in tweet lengths is statistically significant. 2020 twee
 ### Which sentiments are prevalent among retweeted tweets?
 
 ```{r}
-twenty_rts_sentiment_analysis %>%  
+twenty_rts_sentiment_analysis %>% 
+  summarize(sum(n)) %>% 
   top_n(15) %>% 
-  ggplot(aes(x = sentiment, y = n )) +
-  geom_bar(stat = "identity") +
+  ggplot(aes(x = sentiment, y = `sum(n)` )) +
+  geom_bar(stat = "identity", fill="firebrick") +
   coord_flip() +
   ylab("Frequency") +
   xlab("Sentiment") +
   labs(title="30 Mar 2020 Sentiments") -> sentiments_rt_20
 
 twentyone_rts_sentiment_analysis %>%  
+  summarize(sum(n)) %>% 
   top_n(15) %>% 
-  ggplot(aes(x = sentiment, y = n )) +
-  geom_bar(stat = "identity") +
+  ggplot(aes(x = sentiment, y = `sum(n)` )) +
+  geom_bar(stat = "identity", fill="firebrick") +
   coord_flip() +
   ylab("Frequency") +
   xlab("Sentiment") +
@@ -1447,9 +1438,9 @@ twentyone_rts_sentiment_analysis %>%
 
 browsable(div(
   style = "display: flex; flex-wrap: wrap;",
-  div(ggplotly(sentiments_rt_20), tags$br(), style = "width: 100%;"),
-  div(ggplotly(sentiments_rt_21), style = "width: 100%;"),
-  p("---")
+  div(ggplotly(sentiments_rt_20), style = "width: 50%;"),
+  div(ggplotly(sentiments_rt_21), style = "width: 50%;"),
+  p(" ")
 ))
 ```
 
@@ -1481,7 +1472,7 @@ The 2021 retweets appear to be more negatively valenced.
 ### What textual features (sentiments and words) predict how viral a tweet became in 2020?
 
 ```{r}
-vip(rf_model20, num_features = 25) + 
+vip(rf_model20, num_features = 25, aesthetics = list(fill = "firebrick")) + 
   ggtitle('GBM - 30 Mar 2020 Variable Importance for Virality') -> vip_rf20
 
 library(MASS)
@@ -1496,31 +1487,8 @@ step.model <- stepAIC(full.model, direction = "backward",
                       trace = FALSE)
 tab_model(step.model)$knitr %>% HTML() -> stepmodel20
 
-browsable(div(
-  style = "display: flex; flex-wrap: wrap;",
-  div(ggplotly(vip_rf20), tags$br(), style = "width: 100%;"),
-  p(stepmodel20, style = "width: 100%; font-family: sans-serif; border: dashed;")
-))
-```
 
-
-***
-Let's see if using sentiments, mean AFINN score, and topic-specific words, we can predict a given tweet's retweet-to-follower ratio (a measure of how viral a tweet was---to what extent it took off). We produce two models for each year---a random forests model and a stepwise regression optimized using AIC. We could include tweet length but opt not to because we are not interested in generating a highly predictive model but understanding what semantic content is being retweeted, and tweet length does not speak strongly to that question.
-
-We are not interested in knowing the predictive efficacy or goodness of fit of the random forests model. We only want to know, out of the features we have selected, which seem the most important to predicting virality. As such, we display variable importance plots for each model and use these for interpretation.
-
-According to our random forests model, the most predictive variables are positive sentiments, disgust, and the words "sick," "hoax," and "country" in all of its variations.
-
-Because the model is predicting both high and low values, the sign of each predictor (positive or negative effect on virality) is unclear. However, we would surmise that features with a strong positive effect would be the most likely to be selected given that most of the variation is positive.
-
-However, because we can't be sure about this, we build a simple backward stepwise linear regression (optimized on AIC) to determine which effects were positive and which were likely negative.
-
-It appears that using the word "hoax" predicts a substantial increase in virality---to the tune of over five retweets per follower. The AFINN variable has a negative coefficient, which implies that more positive tweets go less viral. Confusingly, the opposite effect is seen with the joy sentiment. Perhaps joy denotes something more specific than a positive AFINN score would imply. Surprise sentiments predict less virality, and, for whatever reason, the use of the word "gonna" predicts a substantial increase in virality.
-
-### What textual features (sentiments and words) predict how viral a tweet became in 2021?
-
-```{r}
-vip(rf_model21, num_features = 25) + 
+vip(rf_model21, num_features = 25, aesthetics = list(fill = "firebrick")) + 
   ggtitle('GBM - 30 Mar 2021 Variable Importance for Virality') -> vip_rf21
 
 twentyone_vars <- importance(rf_model21) %>% as.data.frame() %>% rownames_to_column() %>% arrange(desc(.))
@@ -1536,14 +1504,32 @@ tab_model(step.model)$knitr %>% HTML() -> stepmodel21
 
 browsable(div(
   style = "display: flex; flex-wrap: wrap;",
-  div(ggplotly(vip_rf21), tags$br(), style = "width: 100%;"),
-  p(stepmodel21, style = "width: 100%; font-family: sans-serif; border: dashed;")
+  div(ggplotly(vip_rf20), style = "width: 50%;"),
+  div(ggplotly(vip_rf21), style = "width: 50%;"),
+  div(h3('2020 Stepwise Regression'), tags$br(), p(stepmodel20, style = "font-family: sans-serif; border: dashed;"), style = "width: 50%;"),
+  div(h3('2021 Stepwise Regression'), tags$br(), p(stepmodel21, style = "font-family: sans-serif; border: dashed;"), style = "width: 50%;")
 ))
 ```
 
 
 ***
+Let's see if using sentiments, mean AFINN score, and topic-specific words, we can predict a given tweet's retweet-to-follower ratio (a measure of how viral a tweet was---to what extent it took off). We produce two models for each year---a random forests model and a stepwise regression optimized using AIC. We could include tweet length but opt not to because we are not interested in generating a highly predictive model but understanding what semantic content is being retweeted, and tweet length does not speak strongly to that question.
+
+We are not interested in knowing the predictive efficacy or goodness of fit of the random forests model. We only want to know, out of the features we have selected, which seem the most important to predicting virality. As such, we display variable importance plots for each model and use these for interpretation.
+
+**2020**
+
+According to our random forests model, the most predictive variables are positive sentiments, disgust, and the words "sick," "hoax," and "country" in all of its variations.
+
+Because the model is predicting both high and low values, the sign of each predictor (positive or negative effect on virality) is unclear. However, we would surmise that features with a strong positive effect would be the most likely to be selected given that most of the variation is positive.
+
+However, because we can't be sure about this, we build a simple backward stepwise linear regression (optimized on AIC) to determine which effects were positive and which were likely negative.
+
+It appears that using the word "hoax" predicts a substantial increase in virality---to the tune of over five retweets per follower. The AFINN variable has a negative coefficient, which implies that more positive tweets go less viral. Confusingly, the opposite effect is seen with the joy sentiment. Perhaps joy denotes something more specific than a positive AFINN score would imply. Surprise sentiments predict less virality, and, for whatever reason, the use of the word "gonna" predicts a substantial increase in virality.
+
+**2021**
 
 For our 2021 random forests model, the word "take" was the most predictive, followed by positive sentiments, trust sentiments, anger, surprise, fear and joy. It seems that particular words were much less predictive on 30 Mar 2021. Perhaps this means that there are fewer "hot topics," so mood is our best way to finger the pulse now relative to early in the pandemic.
 
 Again, we also produce a backward stepwise regression, which confirms the predictive significance of the word "take" and shows that it predicts more retweets per follower. Positive sentiments, fear, and joy predict less virality, whereas trust predicts more.
+
