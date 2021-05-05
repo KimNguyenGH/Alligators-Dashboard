@@ -856,6 +856,7 @@ We also examine differences in geographic attention between the two dates.  More
 Lastly, we examine which features are most predictive of how many retweets a tweet gets. In general, it is believed that social media posts with more extreme positive/negative valence tend to be more likely to go viral. In fact, the best selling author Seth Godin has remarked that ”One of the problems with social media is that the stronger the view you express, the more likely it will become amplified”.  By examining the kinds of sentiments associated with more viral tweets, as well as the sources of these tweets and the textual elements of the tweets, we can either confirm or disconfirm this common belief. The results that we find can help inform policy leaders about how to craft tweets containing very important information in a way that maximizes the likelihood that a large number of people will be exposed to the important information. This analysis will also provide valuable insight regarding how the virality of tweets has changed over time, so that policy leaders can adjust their approaches to the climate of the times.
 
 
+
 II. Methods {.storyboard}
 =========================================
 
