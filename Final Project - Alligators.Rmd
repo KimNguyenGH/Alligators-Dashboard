@@ -1048,9 +1048,9 @@ ttest <- paste(capture.output(test), collapse = "<br>")
 browsable(div(
   style = "display: flex; flex-wrap: wrap; justify-content: center",
   p(print1st, tags$br(), print2nd, style = "width: 100%; border: dashed; color: black; font-family: sans-serif;"),
+  tags$br(),
   div(hist1, style = "width: 50%;"),
-  div(hist2, style = "width: 50%;"),
-  div(HTML(ttest), style = "width: 100%; border: dashed; color: black; font-family: sans-serif;")
+  div(hist2, style = "width: 50%;")
 ))
 ```
 
@@ -1131,12 +1131,18 @@ key <-
 freq <- 
   kbl(table(twenty_dfm$topic), booktabs = T, digits = 2) %>% kable_styling()
 
+
+table(twenty_dfm$topic) %>% as.data.frame() %>% 
+  ggplot(aes(x = Var1, y = Freq)) + geom_bar(stat = "identity", fill="firebrick") + labs(x = "Topic Number") +
+  ggtitle("30 Mar 2020 Topic Frequencies") ->
+  freq_topics20
+
 browsable(div(
   h2("2020 Topic Key", style = "font-family: sans-serif"),
   div(HTML(key), style = "width: 100%;"),
   tags$br(),
-  h2("Frequency", style = "font-family: sans-serif"),
-  div(HTML(freq), style = "width: 50%;")
+  div(ggplotly(freq_topics20), style = "width: 100%;"),
+  p(" ")
 ))
 ```
 
@@ -1179,12 +1185,17 @@ key <-
 freq <- 
   kbl(table(twentyone_dfm$topic), booktabs = T, digits = 2) %>% kable_styling()
 
+table(twentyone_dfm$topic) %>% as.data.frame() %>% 
+  ggplot(aes(x = Var1, y = Freq)) + geom_bar(stat = "identity", fill="firebrick") + labs(x = "Topic Number") +
+  ggtitle("30 Mar 2021 Topic Frequencies") ->
+  freq_topics21
+
 browsable(div(
-  h2("2021 Topic Key", style = "width: 100%; font-family: sans-serif"),
+  h2("2020 Topic Key", style = "font-family: sans-serif"),
   div(HTML(key), style = "width: 100%;"),
   tags$br(),
-  h2("Frequency", style = "width: 100%; font-family: sans-serif"),
-  div(HTML(freq), style = "width: 50%;")
+  div(ggplotly(freq_topics21), style = "width: 100%;"),
+  p(" ")
 ))
 ```
 
@@ -1217,18 +1228,19 @@ Topic 10 is the emotional topic, with angry curse words and words like "love," "
 
 ```{r}
 hashtags20 <-
-  kbl(head(tstat_freq_twenty, 20, digits = 2) %>% select(1,2), booktabs = T) %>% 
+  kbl(head(tstat_freq_twenty %>% as.data.frame() %>% select(1,2), 20, digits = 2), booktabs = T) %>% 
   kable_styling()
 
 hashtags21 <-
-  kbl(head(tstat_freq_twentyone, 20, digits = 2) %>% select(1,2), booktabs = T) %>% 
+  kbl(head(tstat_freq_twentyone %>% as.data.frame() %>% select(1,2), 20, digits = 2), booktabs = T) %>% 
   kable_styling()
 
 browsable(div(
+  style = "display: flex; flex-wrap: wrap;",
   h2("2020", style = "width: 50%; font-family: sans-serif"),
   h2("2021", style = "width: 50%; font-family: sans-serif"),
-  div(HTML(hashtags20), style = "width: 50%;"),
-  div(HTML(hashtags21), style = "width: 50%;")
+  div(HTML(hashtags20), style = "width: 50%; border-collapse: separate; border-spacing: 10px; display:table-cell; padding:5px;"),
+  div(HTML(hashtags21), style = "width: 50%; border-collapse: separate; border-spacing: 10px; display:table-cell; padding:5px;")
 ))
 ```
 
@@ -1475,7 +1487,7 @@ twenty_uqtweets <-
 
 twenty_rts %>% 
   group_by(ScreenName) %>%
-  summarize(Followers = mean(Followers), Retweets = sum(Retweets)) %>% 
+  summarize(Followers = round(mean(Followers)), Retweets = sum(Retweets)) %>% 
   left_join(twenty_uqtweets %>% 
               filter(n>1), by = c('ScreenName')) %>%
   mutate(rt_index = (Retweets/n)/Followers) %>% 
@@ -1491,7 +1503,7 @@ twentyone_uqtweets <-
 
 twentyone_rts %>% 
   group_by(ScreenName) %>%
-  summarize(Followers = mean(Followers), Retweets = sum(Retweets)) %>% 
+  summarize(Followers = round(mean(Followers)), Retweets = sum(Retweets)) %>% 
   left_join(twentyone_uqtweets %>% 
               filter(n>1), by = c('ScreenName')) %>%
   mutate(rt_index = (Retweets/n)/Followers) %>% 
@@ -1515,12 +1527,12 @@ t.test(x = twenty_rts$Retweets,
 
 browsable(div(
   style = "display: flex; flex-wrap: wrap;",
-  h2("2020", style = "width: 100%; font-family: sans-serif;"),
-  div(HTML(tweetgame20), tags$br(), style = "width: 100%;"),
-  h2("2021", style = "width: 100%; font-family: sans-serif;"),
-  div(HTML(tweetgame21), style = "width: 100%;"),
+  h2("2020", style = "width: 50%; font-family: sans-serif;"),
+  h2("2021", style = "width: 50%; font-family: sans-serif;"),
   tags$br(),
-  p(mean_diff_rts, tags$br(), rt_difftest, style = "width: 100%; font-family: sans-serif; border: dashed;")
+  div(HTML(tweetgame20), tags$br(), style = "width: 50%;"),
+  div(HTML(tweetgame21), style = "width: 50%;"),
+  p(mean_diff_rts, style = "width: 100%; font-family: sans-serif; border: dashed;")
 ))
 ```
 
@@ -1537,9 +1549,7 @@ In 2021, richardajabu had an infinitely high retweet index by managing to get tw
 
 Note, however, that overall we observe a stark difference between the retweet indices in 2020 and 2021. Perhaps there were more tweets going viral in March of 2020 than in March of 2021. We test this by examining whether there's a difference in mean retweets for each sample.
 
-Among the tweets that were retweeted (an important specification), the average number of retweets were *much higher* in 2020 than in 2021. Let's see if this mean difference is statistically significant.
-
-An unpaired two sample t-test leads us to accept the one-sided alternative hypothesis that the mean number of retweets on 30 Mar 2020 was substantially greater than the mean number of retweets on the same date in 2021. It seems that people were hitting the retweet button a lot more in the spring of 2020 than in 2021, which makes sense given that people were stuck at home in lockdown with a lot of novel happenings to discuss. Now, with vaccines being rolled out and coronavirus in decline, there is much less panic, anger, and dramatic attention being paid towards the virus.
+Among the tweets that were retweeted (an important specification), the average number of retweets were *much higher* in 2020 than in 2021. An unpaired two sample t-test leads us to accept the one-sided alternative hypothesis (p<0.01) that the mean number of retweets on 30 Mar 2020 was substantially greater than the mean number of retweets on the same date in 2021. It seems that people were hitting the retweet button a lot more in the spring of 2020 than in 2021, which makes sense given that people were stuck at home in lockdown with a lot of novel happenings to discuss. Now, with vaccines being rolled out and coronavirus in decline, there is much less panic, anger, and dramatic attention being paid towards the virus.
 
 ### In each year, who was the worst at getting retweeted?
 
@@ -1562,10 +1572,11 @@ twentyone_rts %>% group_by(ScreenName) %>%
 
 browsable(div(
   style = "display: flex; flex-wrap: wrap;",
-  h2("2020", style = "width: 100%; font-family: sans-serif;"),
-  div(HTML(worstrt20), style = "width: 100%;"),
-  h2("2021", style = "width: 100%; font-family: sans-serif;"),
-  div(HTML(worstrt21), style = "width: 100%;")
+  h2("2020", style = "width: 50%; font-family: sans-serif;"),
+  h2("2021", style = "width: 50%; font-family: sans-serif;"),
+  tags$br(),
+  div(HTML(worstrt20), style = "width: 50%;"),
+  div(HTML(worstrt21), style = "width: 50%;")
 ))
 ```
 
@@ -1634,10 +1645,10 @@ ggplot(data = twentyone_rts_wordcounts, aes(x = tweetLength)) + geom_histogram(f
 
 browsable(div(
   style = "display: flex; flex-wrap: wrap;",
-  div(ggplotly(rtlength20), style = "width: 50%;"),
-  div(ggplotly(rtlength21), style = "width: 50%;"),
+  p(rt_lengths, tags$br(), style = "width: 100%; font-family: sans-serif; border: dashed"),
   tags$br(),
-  p(rt_lengths, tags$br(), style = "width: 100%; font-family: sans-serif; border: dashed")
+  div(ggplotly(rtlength20), style = "width: 50%;"),
+  div(ggplotly(rtlength21), style = "width: 50%;")
 ))
 ```
 
@@ -1806,6 +1817,6 @@ Kim Nguyen assisted with analyses of tweet length in both original tweets and re
 
 Ryan Karbowicz produced hashtag counts, topic frequency bar graphs for each sample, and much of the writing.
 
-Meghan Aines was one of our group members.
+Meghan Aines helped with the writing and formatting of the webpage.
 
 </div>
