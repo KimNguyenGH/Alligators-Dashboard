@@ -1209,19 +1209,18 @@ Topic 10 is the emotional topic, with angry curse words and words like "love," "
 
 ```{r}
 hashtags20 <-
-  kbl(head(tstat_freq_twenty, 20, digits = 2), booktabs = T) %>% 
+  kbl(head(tstat_freq_twenty, 20, digits = 2) %>% select(1,2), booktabs = T) %>% 
   kable_styling()
 
 hashtags21 <-
-  kbl(head(tstat_freq_twentyone, 20, digits = 2), booktabs = T) %>% 
+  kbl(head(tstat_freq_twentyone, 20, digits = 2) %>% select(1,2), booktabs = T) %>% 
   kable_styling()
 
 browsable(div(
-  h2("2020", style = "font-family: sans-serif"),
-  div(HTML(hashtags20), style = "width: 100%;"),
-  tags$br(),
-  h2("2021", style = "font-family: sans-serif"),
-  div(HTML(hashtags21), style = "width: 100%;")
+  h2("2020", style = "width: 50%; font-family: sans-serif"),
+  h2("2021", style = "width: 50%; font-family: sans-serif"),
+  div(HTML(hashtags20), style = "width: 50%;"),
+  div(HTML(hashtags21), style = "width: 50%;")
 ))
 ```
 
@@ -1291,33 +1290,49 @@ In 2021, the English-speaking Twitter user-base seems to be slightly more focuse
 ### What words are associated with each country?
 
 ```{r}
-us20 <- kbl(as.data.frame(coef(newsmap20)$US)) %>% kable_styling()
-cn20 <- kbl(as.data.frame(coef(newsmap20)$CN)) %>% kable_styling()
-gb20 <- kbl(as.data.frame(coef(newsmap20)$GB)) %>% kable_styling()
-ca20 <- kbl(as.data.frame(coef(newsmap20)$CA)) %>% kable_styling()
+formatcoef <- function(arg_1) {
+  df <- 
+    as.data.frame(arg_1)
+  df <- 
+    tibble::rownames_to_column(df, "word") %>% rename(coef = 2)
+  return(kbl(df, booktabs = T, digits = 2) %>% kable_styling())
+}
 
-us21 <- kbl(as.data.frame(coef(newsmap21)$US)) %>% kable_styling()
-cn21 <- kbl(as.data.frame(coef(newsmap21)$CN)) %>% kable_styling()
-gb21 <- kbl(as.data.frame(coef(newsmap21)$GB)) %>% kable_styling()
-ca21 <- kbl(as.data.frame(coef(newsmap21)$CA)) %>% kable_styling()
+us20 <- formatcoef(coef(newsmap20)$US)
+cn20 <- formatcoef(coef(newsmap20)$CN)
+gb20 <- formatcoef(coef(newsmap20)$GB)
+ca20 <- formatcoef(coef(newsmap20)$CA)
+
+us21 <- formatcoef(coef(newsmap21)$US)
+cn21 <- formatcoef(coef(newsmap21)$CN)
+gb21 <- formatcoef(coef(newsmap21)$GB)
+ca21 <- formatcoef(coef(newsmap21)$CA)
 
 browsable(div(
   style = "display: flex; flex-wrap: wrap;",
   h2("2020", tags$br(), style = "width: 100%; font-family: sans-serif;"),
   tags$br(),
-  div(HTML(us20), style = "width: 50%; border-collapse: separate; border-spacing: 10px; display:table-cell; padding:5px;"),
-  div(HTML(cn20), tags$br(), style = "width: 50%; border-collapse: separate; border-spacing: 10px; display:table-cell; padding:5px;"),
+  h3("US", tags$br(), style = "width: 25%; font-family: sans-serif;"),
+  h3("China", tags$br(), style = "width: 25%; font-family: sans-serif;"),
+  h3("Great Britain", tags$br(), style = "width: 25%; font-family: sans-serif;"),
+  h3("Canada", tags$br(), style = "width: 25%; font-family: sans-serif;"),
   tags$br(),
-  div(HTML(gb20), style = "width: 50%; border-collapse: separate; border-spacing: 10px; display:table-cell; padding:5px;"),
-  div(HTML(ca20), tags$br(), style = "width: 50%; border-collapse: separate; border-spacing: 10px; display:table-cell; padding:5px;"),
+  div(HTML(us20), style = "width: 25%; border-collapse: separate; border-spacing: 10px; display:table-cell; padding:5px;"),
+  div(HTML(cn20), style = "width: 25%; border-collapse: separate; border-spacing: 10px; display:table-cell; padding:5px;"),
+  div(HTML(gb20), style = "width: 25%; border-collapse: separate; border-spacing: 10px; display:table-cell; padding:5px;"),
+  div(HTML(ca20), tags$br(), style = "width: 25%; border-collapse: separate; border-spacing: 10px; display:table-cell; padding:5px;"),
   tags$br(),
   h2("2021", tags$br(), style = "width: 100%; font-family: sans-serif;"),
   tags$br(),
-  div(HTML(us21), style = "width: 50%; border-collapse: separate; border-spacing: 10px; display:table-cell; padding:5px;"),
-  div(HTML(cn21), tags$br(), style = "width: 50%; border-collapse: separate; border-spacing: 10px; display:table-cell; padding:5px;"),
+  h3("US", tags$br(), style = "width: 25%; font-family: sans-serif;"),
+  h3("China", tags$br(), style = "width: 25%; font-family: sans-serif;"),
+  h3("Great Britain", tags$br(), style = "width: 25%; font-family: sans-serif;"),
+  h3("Canada", tags$br(), style = "width: 25%; font-family: sans-serif;"),
   tags$br(),
-  div(HTML(gb21), style = "width: 50%; border-collapse: separate; border-spacing: 10px; display:table-cell; padding:5px;"),
-  div(HTML(ca21), tags$br(), style = "width: 50%; border-collapse: separate; border-spacing: 10px; display:table-cell; padding:5px;")
+  div(HTML(us21), style = "width: 25%; border-collapse: separate; border-spacing: 10px; display:table-cell; padding:5px;"),
+  div(HTML(cn21), style = "width: 25%; border-collapse: separate; border-spacing: 10px; display:table-cell; padding:5px;"),
+  div(HTML(gb21), style = "width: 25%; border-collapse: separate; border-spacing: 10px; display:table-cell; padding:5px;"),
+  div(HTML(ca21), style = "width: 25%; border-collapse: separate; border-spacing: 10px; display:table-cell; padding:5px;")
 ))
 ```
 
@@ -1428,10 +1443,11 @@ twentyone_rts %>%
 
 browsable(div(
   style = "display: flex; flex-wrap: wrap;",
-  h2("2020", style = "width: 100%; font-family: sans-serif;"),
-  div(HTML(mostrts20), tags$br(), style = "width: 100%;"),
-  h2("2021", style = "width: 100%; font-family: sans-serif;"),
-  div(HTML(mostrts21), style = "width: 100%;")
+  h2("2020", style = "width: 50%; font-family: sans-serif;"),
+  h2("2021", style = "width: 50%; font-family: sans-serif;"),
+  tags$br(),
+  div(HTML(mostrts20), tags$br(), style = "width: 50%;"),
+  div(HTML(mostrts21), style = "width: 50%;")
 ))
 ```
 
@@ -1457,7 +1473,7 @@ twenty_rts %>%
   mutate(rt_index = (Retweets/n)/Followers) %>% 
   arrange(desc(rt_index)) %>% 
   head(10) %>% 
-  kbl(booktabs = T) %>% kable_styling() -> tweetgame20
+  kbl(booktabs = T, digits = 2) %>% kable_styling() -> tweetgame20
 
 twentyone_uqtweets <- 
   twentyone_rts %>% 
@@ -1473,7 +1489,7 @@ twentyone_rts %>%
   mutate(rt_index = (Retweets/n)/Followers) %>% 
   arrange(desc(rt_index)) %>% 
   head(10) %>% 
-  kbl(booktabs = T) %>% kable_styling() -> tweetgame21
+  kbl(booktabs = T, digits = 2) %>% kable_styling() -> tweetgame21
 
 writeLines(c(paste0("30 Mar 2020 Mean RTs: ", 
                   round(mean(twenty_rts$Retweets), 2)), 
@@ -1524,17 +1540,17 @@ twenty_rts %>% group_by(ScreenName) %>%
   summarize(Followers = mean(Followers), Retweets = sum(Retweets)) %>% 
   left_join(twenty_uqtweets %>% 
               filter(n>1), by = c('ScreenName')) %>% 
-  mutate(`rt_index*1e7` = ((Retweets/n)/Followers) * 10000000) %>% 
-  arrange(rt_index) %>% head(10) %>% 
-  kbl(booktabs = T) %>% kable_styling() -> worstrt20
+  mutate(`rt_index*1e5` = ((Retweets/n)/Followers) * 100000) %>% 
+  arrange(`rt_index*1e5`) %>% head(10) %>% 
+  kbl(booktabs = T, digits = 2) %>% kable_styling() -> worstrt20
 
 twentyone_rts %>% group_by(ScreenName) %>%
   summarize(Followers = mean(Followers), Retweets = sum(Retweets)) %>% 
   left_join(twenty_uqtweets %>% 
               filter(n>1), by = c('ScreenName')) %>% 
-  mutate(`rt_index*1e7` = ((Retweets/n)/Followers) * 10000000) %>% 
-  arrange(rt_index) %>% head(10) %>% 
-  kbl(booktabs = T) %>% kable_styling() -> worstrt21
+  mutate(`rt_index*1e5` = ((Retweets/n)/Followers) * 100000) %>% 
+  arrange(`rt_index*1e5`) %>% head(10) %>% 
+  kbl(booktabs = T, digits = 2) %>% kable_styling() -> worstrt21
 
 browsable(div(
   style = "display: flex; flex-wrap: wrap;",
@@ -1685,7 +1701,7 @@ The 2021 retweets appear to be more negatively valenced.
 
 ```{r}
 vip(rf_model20, num_features = 25, aesthetics = list(fill = "firebrick")) + 
-  ggtitle('GBM - 30 Mar 2020 Variable Importance for Virality') -> vip_rf20
+  ggtitle('Random Forests - 2020 Variable Importance for Virality') -> vip_rf20
 
 library(MASS)
 twenty_vars <- importance(rf_model20) %>% as.data.frame() %>% rownames_to_column() %>% arrange(desc(.))
@@ -1701,7 +1717,7 @@ tab_model(step.model)$knitr %>% HTML() -> stepmodel20
 
 
 vip(rf_model21, num_features = 25, aesthetics = list(fill = "firebrick")) + 
-  ggtitle('GBM - 30 Mar 2021 Variable Importance for Virality') -> vip_rf21
+  ggtitle('Random Forests - 2021 Variable Importance for Virality') -> vip_rf21
 
 twentyone_vars <- importance(rf_model21) %>% as.data.frame() %>% rownames_to_column() %>% arrange(desc(.))
 b <- paste(twentyone_vars$rowname[1:25], collapse="+")
@@ -1769,5 +1785,19 @@ h2("Limitations")
 First, we ultimately compared one day of tweets to another day of tweets one year later. While this computation already consumed a massive amount of computational power and memory, a more robust analysis might have compared a full week or even a month of tweets to another week or month of tweets. Because we only analyzed one day of tweets, there is a chance that our analysis could be capturing idiosyncratic variation for a given day rather than the general underlying sentiment of a prolonged time period.  It goes without saying, however, that a full day of tweets is certainly more robust than one hour (or even one minute) of tweets.
 
 Second, in this analysis, only certain kinds of people are drawn to Twitter, so Twitter analysis does not necessarily offer an accurate representation of how the population feels as a whole.  More outspoken and extroverted people are more likely to express their views on Twitter, which leads to the underrepresentation of more soft spoken and introverted people. Therefore, this Twitter Analysis would be best utilized in combination with other data collection and analysis methods.
+
+```{r, echo = FALSE}
+h2("Contributions")
+```
+
+Ammar Plumber did the data retrieval and cleaning along with the topic modeling, newsmaps, and the exploratory/predictive analysis of virality.
+
+Elaina Lin produced exploratory visualizations including word frequencies and sentiment analyses, as well as the CSS for the webpage.
+
+Kim Nguyen assisted with analyses of tweet length in both original tweets and retweets. She also contributed to the writing and webpage formatting efforts.
+
+Ryan Karbowicz produced hashtag counts, topic frequency bar graphs for each sample, and much of the writing.
+
+Meghan Aines was one of our group members.
 
 </div>
