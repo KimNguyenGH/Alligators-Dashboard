@@ -2,6 +2,12 @@
 title: "COVID-19 Tweets in Mar 2020 & 2021"
 output: flexdashboard::flex_dashboard
 ---
+<style>
+.ourtext {
+  margin-left:12em;
+  margin-right:12em;
+}
+</style>
 
 ```{r setup, include=FALSE}
 library(flexdashboard)
@@ -264,7 +270,7 @@ twenty_sentiment_analysis2 %>%
         panel.border = element_rect("lightgray", fill = NA)
         ) +  guides(fill=FALSE) + 
   xlab("Count") + ylab("Words") +
-  ggtitle("2020 Sentiment Breakdown") + 
+  ggtitle("30 Mar 2020 Sentiment Breakdown") + 
   coord_flip()  -> twenty_sentiment_analysis3
 
 
@@ -281,7 +287,7 @@ twenty_sentiment_analysis2 %>%
                                   lineheight = 0.9),
         axis.title = element_text(face="bold",size = (12))) + 
   xlab("Count") + ylab("Words") +
-  ggtitle("2020 Sentiment Breakdown") + 
+  ggtitle("30 Mar 2021 Sentiment Breakdown") + 
   coord_flip()  -> twenty_sentiment_analysis4
 
 ggplotly(twenty_sentiment_analysis4, 
@@ -305,7 +311,7 @@ twentyone_sentiment_analysis2 %>%
         panel.border = element_rect("lightgray", fill = NA)
         ) +  guides(fill=FALSE) + 
   xlab("Count") + ylab("Words") +
-  ggtitle("2021 Sentiment Breakdown") + 
+  ggtitle("30 Mar 2021 Sentiment Breakdown") + 
   coord_flip()  -> twentyone_sentiment_analysis3
 
 twentyone_sentiment_analysis2 %>%
@@ -321,7 +327,7 @@ twentyone_sentiment_analysis2 %>%
                                   lineheight = 0.9),
         axis.title = element_text(face="bold",size = (12))) + 
   xlab("Count") + ylab("Words") +
-  ggtitle("2021 Sentiment Breakdown") + 
+  ggtitle("30 Mar 2021 Sentiment Breakdown") + 
   coord_flip() -> twentyone_sentiment_analysis4
 
 ggplotly(twentyone_sentiment_analysis4, 
@@ -337,10 +343,83 @@ twenty_afinn <-
             afinn, 
             by = "word")
 
+twenty_afinn %>% select(word, value) %>% distinct() -> twenty_afinn2
+
+twenty_afinn %>% count(word) -> twenty_afinn_count
+
+right_join(twenty_afinn_count, 
+            twenty_afinn2, 
+            by= "word") -> twenty_afinn_count
+
+colnames(twenty_afinn_count) <- c("Word", "Count", "Value")
+
+twenty_afinn_count[order(twenty_afinn_count$Count, decreasing = TRUE),]  -> twenty_afinn_count
+       
+twenty_afinn_count %>%  mutate(highlgt = ifelse(Value >= 1, "#65d69a", "#ff546b")) -> twenty_afinn_count
+
+twenty_afinn_title <- list(
+  family = "Arial Black",
+  size = 17)
+
+twenty_afinn_table <- plot_ly(
+  type = 'table',
+  columnorder = c(0, 1,2),
+  header = list(
+    values = c("Word", "Count", "Value"),
+    align = c("center", "center"),
+    line = list(width = 1, color = 'black'),
+  #  fill = list(color = c("#1DA1F2","#1DA1F2")),
+    font = list(family = "Arial Black", size = 14.5, face = "bold")
+  ),
+  cells = list(
+    values = rbind(as.character(twenty_afinn_count$Word), as.character(twenty_afinn_count$Count), twenty_afinn_count$Value),
+    align = c("center", "center"),
+    line = list(color = "black", width = 1),
+    font = list(family = "Arial", size = 13, color = c("black")),
+    fill = list(color = list(twenty_afinn_count$highlgt))
+  ))  %>%  layout(title = "30 Mar 2020 AFINN Scores By Word", font = twenty_afinn_title, margin = list(t = -8))
+
+
 twentyone_afinn <-    
  inner_join(twentyone_words, 
             afinn, 
             by = "word")
+
+twentyone_afinn %>% select(word, value) %>% distinct() -> twentyone_afinn2
+
+twentyone_afinn %>% count(word) -> twentyone_afinn_count
+
+right_join(twentyone_afinn_count, 
+            twentyone_afinn2, 
+            by= "word") -> twentyone_afinn_count
+
+colnames(twentyone_afinn_count) <- c("Word", "Count", "Value")
+
+twentyone_afinn_count[order(twentyone_afinn_count$Count, decreasing = TRUE),]  -> twentyone_afinn_count
+       
+twentyone_afinn_count %>%  mutate(highlgt = ifelse(Value >= 1, "#65d69a", "#ff546b")) -> twentyone_afinn_count
+
+twentyone_afinn_title <- list(
+  family = "Arial Black",
+  size = 17)
+
+twentyone_afinn_table <- plot_ly(
+  type = 'table',
+  columnorder = c(0, 1,2),
+  header = list(
+    values = c("Word", "Count", "Value"),
+    align = c("center", "center"),
+    line = list(width = 1, color = 'black'),
+  #  fill = list(color = c("#1DA1F2","#1DA1F2")),
+    font = list(family = "Arial Black", size = 14.5, face = "bold")
+  ),
+  cells = list(
+    values = rbind(as.character(twentyone_afinn_count$Word), as.character(twentyone_afinn_count$Count), twentyone_afinn_count$Value),
+    align = c("center", "center"),
+    line = list(color = "black", width = 1),
+    font = list(family = "Arial", size = 13, color = c("black")),
+    fill = list(color = list(twentyone_afinn_count$highlgt))
+  ))  %>%  layout(title = "30 Mar 2021 AFINN Scores By Word", font = twentyone_afinn_title, margin = list(t = -8) )
 
 twenty_mean_afinn <- 
   twenty_afinn %>% 
@@ -830,6 +909,7 @@ rf_model21 <- ranger(
 I. Introduction
 =========================================
 
+<div class="ourtext">
 ```{r, echo = FALSE}
 h2("Authors and Acknowledgments")
 ```
@@ -873,11 +953,13 @@ h2("B. Research Questions")
 
 5. Are there certain sentiments or topic-specific words that are most likely to attract retweets?
 
-
+</div>
 
 
 II. Methods
 =========================================
+
+<div class="ourtext">
 
 ```{r, echo = FALSE}
 h2("Methods")
@@ -898,7 +980,7 @@ We use the packcircles package to see which account was the most followed and ge
 
 To predict the virality of a tweet, we use the sentiments, mean AFINN score, and topic-specific words as our variables. We use a tweet’s retweet-to-follower ratio to assess the virality of a tweet. We create two models for the two periods - random forests model and backward stepwise regression optimized using Akaike Information Criterion (AIC). We used random forest because it is an ensemble algorithm that runs well on large datasets and has a lower risk of overfitting. Furthermore, this method ensures overall variance and error is minimized. We use backward stepwise regression so we can start with a full model with our selected variables. Using AIC determines the variables to be included by setting the threshold based on the degrees of freedom for the selected variables.
 
-
+</div>
 
 III. Original Tweets {.storyboard}
 =========================================
@@ -1003,6 +1085,15 @@ cat(paste0("Average AFINN scores for all words by date\n",
   capture.output() %>% 
   paste(collapse = "<br>") %>%
   HTML() %>% div(style = "font-family: sans-serif; border: dashed;")
+
+browsable(div(
+  style = "display: flex; flex-wrap: wrap; justify-content: center;",
+  div(twenty_afinn_table, style = "width: 50%; height:600px;"),
+  tags$br(),
+  div(twentyone_afinn_table, style = "width: 50%; height: 600px;"),
+  p("---")
+))
+
 ```
 
 ***
@@ -1011,6 +1102,7 @@ Next, we join the AFINN sentiment lexicon, a list of English terms manually rate
 
 The tweets from 2021 are slightly more positive, but the difference appears negligible.
 
+In 2020, the word "support" had the most frequency and is positively valenced, whereas in 2021, the word "stop" had the most frequency and is negatively valenced. What is interesting to note is that "support" and "stop" are opposite words. This demonstrate that perhaps initially, there were certain efforts people wanted to advocate and promote to mitigate effects of the pandemic. Over the course of the year, it could be that people grew exhausted of the pandemic and wanted certain aspects to stop.
 
 ### What topics/discussions are prevalent in tweets published on 30 Mar 2020?
 
@@ -1304,7 +1396,7 @@ browsable(div(
 
 **2020**
 
-Obama was the most followed person getting retweeted on that day, and it seems that Katy Perry was second. India PM Narendra Modi also was getting retweeted at the time, along with several nwes outlets, politicians, and celebrities.
+Obama was the most followed person getting retweeted on that day, and it seems that Katy Perry was second. India PM Narendra Modi also was getting retweeted at the time, along with several news outlets, politicians, and celebrities.
 
 **2021**
 
@@ -1646,6 +1738,7 @@ Again, we also produce a backward stepwise regression, which confirms the predic
 
 V. Conclusion
 =========================================
+<div class="ourtext">
 
 ```{r, echo = FALSE}
 h2("Conclusion")
@@ -1665,3 +1758,5 @@ h2("Limitations")
 First, we ultimately compared one day of tweets to another day of tweets one year later. While this computation already consumed a massive amount of computational power and memory, a more robust analysis might have compared a full week or even a month of tweets to another week or month of tweets. Because we only analyzed one day of tweets, there is a chance that our analysis could be capturing idiosyncratic variation for a given day rather than the general underlying sentiment of a prolonged time period.  It goes without saying, however, that a full day of tweets is certainly more robust than one hour (or even one minute) of tweets.
 
 Second, in this analysis, only certain kinds of people are drawn to Twitter, so Twitter analysis does not necessarily offer an accurate representation of how the population feels as a whole.  More outspoken and extroverted people are more likely to express their views on Twitter, which leads to the underrepresentation of more soft spoken and introverted people. Therefore, this Twitter Analysis would be best utilized in combination with other data collection and analysis methods.
+
+</div>
