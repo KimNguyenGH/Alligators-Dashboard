@@ -7,6 +7,14 @@ output: flexdashboard::flex_dashboard
   margin-left:12em;
   margin-right:12em;
 }
+
+.navbar-inverse {
+background-color: #011F5B !important;
+}
+
+.storyboard-nav .sbframelist ul li.active {
+    background-color: #6aade2;
+}
 </style>
 
 ```{r setup, include=FALSE}
