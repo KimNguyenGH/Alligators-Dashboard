@@ -1887,7 +1887,7 @@ h2("Contributions")
 
 Ammar Plumber did the data retrieval and cleaning along with the topic modeling, newsmaps, and the exploratory/predictive analysis of virality.
 
-Elaina Lin produced exploratory visualizations including word frequencies and sentiment analyses, as well as the CSS for the webpage.
+Elaina Lin produced exploratory visualizations including word frequencies and sentiment analyses, as well as the CSS for the webpage. She also contributed to the writing.
 
 Kim Nguyen assisted with analyses of tweet length in both original tweets and retweets. She also contributed to the writing and webpage formatting efforts.
 
