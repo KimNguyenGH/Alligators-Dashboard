@@ -815,10 +815,83 @@ twenty_rts_afinn <-
             afinn, 
             by = "word")
 
+
+twenty_rts_afinn %>% select(word, value) %>% distinct() -> twenty_rts_afinn2
+
+twenty_rts_afinn %>% count(word) -> twenty_rts_afinn_count
+
+right_join(twenty_rts_afinn_count, 
+            twenty_rts_afinn2, 
+            by= "word") -> twenty_rts_afinn_count
+
+colnames(twenty_rts_afinn_count) <- c("Word", "Count", "Value")
+
+twenty_rts_afinn_count[order(twenty_rts_afinn_count$Count, decreasing = TRUE),]  -> twenty_rts_afinn_count
+       
+twenty_rts_afinn_count %>%  mutate(highlgt = ifelse(Value >= 1, "#65d69a", "#ff546b")) -> twenty_rts_afinn_count
+
+twenty_rts_afinn_title <- list(
+  size = 15)
+
+twenty_rts_afinn_table <- plot_ly(
+  type = 'table',
+  columnorder = c(0, 1,2),
+  header = list(
+    values = c("Word", "Count", "Value"),
+    align = c("center", "center"),
+    line = list(width = 1, color = 'black'),
+  #  fill = list(color = c("#1DA1F2","#1DA1F2")),
+    font = list(size = 14)
+  ),
+  cells = list(
+    values = rbind(as.character(twenty_rts_afinn_count$Word), as.character(twenty_rts_afinn_count$Count), twenty_rts_afinn_count$Value),
+    align = c("center", "center"),
+    line = list(color = "black", width = 1),
+    font = list(size = 13, color = c("black")),
+    fill = list(color = list(twenty_rts_afinn_count$highlgt))
+  ))  %>%  layout(title = "2020 AFINN Scores By Word", font = twenty_rts_afinn_title, margin = list(t = -8))
+
+
 twentyone_rts_afinn <-    
  inner_join(twentyone_rts_words, 
             afinn, 
             by = "word")
+
+
+twentyone_rts_afinn %>% select(word, value) %>% distinct() -> twentyone_rts_afinn2
+
+twentyone_rts_afinn %>% count(word) -> twentyone_rts_afinn_count
+
+right_join(twentyone_rts_afinn_count, 
+            twentyone_rts_afinn2, 
+            by= "word") -> twentyone_rts_afinn_count
+
+colnames(twentyone_rts_afinn_count) <- c("Word", "Count", "Value")
+
+twentyone_rts_afinn_count[order(twentyone_rts_afinn_count$Count, decreasing = TRUE),]  -> twentyone_rts_afinn_count
+       
+twentyone_rts_afinn_count %>%  mutate(highlgt = ifelse(Value >= 1, "#65d69a", "#ff546b")) -> twentyone_rts_afinn_count
+
+twentyone_rts_afinn_title <- list(
+  size = 15)
+
+twentyone_rts_afinn_table <- plot_ly(
+  type = 'table',
+  columnorder = c(0, 1,2),
+  header = list(
+    values = c("Word", "Count", "Value"),
+    align = c("center", "center"),
+    line = list(width = 1, color = 'black'),
+  #  fill = list(color = c("#1DA1F2","#1DA1F2")),
+    font = list(size = 14)
+  ),
+  cells = list(
+    values = rbind(as.character(twentyone_rts_afinn_count$Word), as.character(twentyone_rts_afinn_count$Count), twentyone_rts_afinn_count$Value),
+    align = c("center", "center"),
+    line = list(color = "black", width = 1),
+    font = list(size = 13, color = c("black")),
+    fill = list(color = list(twentyone_rts_afinn_count$highlgt))
+  ))  %>%  layout(title = "2021 AFINN Scores By Word", font = twentyone_rts_afinn_title, margin = list(t = -8) )
 
 twenty_rts_mean_afinn <- 
   twenty_rts_afinn %>% 
@@ -1119,7 +1192,7 @@ Next, we join the AFINN sentiment lexicon, a list of English terms manually rate
 
 The tweets from 2021 are slightly more positive, but the difference appears negligible.
 
-In 2020, the word "support" had the most frequency and is positively valenced, whereas in 2021, the word "stop" had the most frequency and is negatively valenced. What is interesting to note is that "support" and "stop" are opposite words. This demonstrate that perhaps initially, there were certain efforts people wanted to advocate and promote to mitigate effects of the pandemic. Over the course of the year, it could be that people grew exhausted of the pandemic and wanted certain aspects to stop.
+In 2020, the word "support" (positively valenced) was the most frequently appearing word from the lexicon, whereas in 2021, the word "stop" (negatively valenced) appeared the most frequently. Note that "support" and "stop" are opposites. Perhaps initially, there were certain efforts people wanted to promote to mitigate effects of the pandemic. It could be that people grew exhausted of the pandemic and became more attitudinally opposed to certain phenomena than supportive of others.
 
 ### What topics/discussions are prevalent in tweets published on 30 Mar 2020?
 
@@ -1466,8 +1539,8 @@ browsable(div(
   h2("2020", style = "width: 50%; font-family: sans-serif;"),
   h2("2021", style = "width: 50%; font-family: sans-serif;"),
   tags$br(),
-  div(HTML(mostrts20), tags$br(), style = "width: 50%;"),
-  div(HTML(mostrts21), style = "width: 50%;")
+  div(HTML(mostrts20), style = "width: 50%; border-collapse: separate; border-spacing: 10px; display:table-cell; padding:5px;"),
+  div(HTML(mostrts21), style = "width: 50%; border-collapse: separate; border-spacing: 10px; display:table-cell; padding:5px;")
 ))
 ```
 
@@ -1530,8 +1603,8 @@ browsable(div(
   h2("2020", style = "width: 50%; font-family: sans-serif;"),
   h2("2021", style = "width: 50%; font-family: sans-serif;"),
   tags$br(),
-  div(HTML(tweetgame20), tags$br(), style = "width: 50%;"),
-  div(HTML(tweetgame21), style = "width: 50%;"),
+  div(HTML(tweetgame20), style = "width: 50%; border-collapse: separate; border-spacing: 10px; display:table-cell; padding:5px;"),
+  div(HTML(tweetgame21), style = "width: 50%; border-collapse: separate; border-spacing: 10px; display:table-cell; padding:5px;"),
   p(mean_diff_rts, style = "width: 100%; font-family: sans-serif; border: dashed;")
 ))
 ```
@@ -1547,9 +1620,7 @@ In 2020, camilacousseau over two tweets averaged over six retweets per follower.
 
 In 2021, richardajabu had an infinitely high retweet index by managing to get two tweets retweeted three times despite having zero followers. Incredible.
 
-Note, however, that overall we observe a stark difference between the retweet indices in 2020 and 2021. Perhaps there were more tweets going viral in March of 2020 than in March of 2021. We test this by examining whether there's a difference in mean retweets for each sample.
-
-Among the tweets that were retweeted (an important specification), the average number of retweets were *much higher* in 2020 than in 2021. An unpaired two sample t-test leads us to accept the one-sided alternative hypothesis (p<0.01) that the mean number of retweets on 30 Mar 2020 was substantially greater than the mean number of retweets on the same date in 2021. It seems that people were hitting the retweet button a lot more in the spring of 2020 than in 2021, which makes sense given that people were stuck at home in lockdown with a lot of novel happenings to discuss. Now, with vaccines being rolled out and coronavirus in decline, there is much less panic, anger, and dramatic attention being paid towards the virus.
+We also check whether there's a difference in mean retweets for each sample. Among the tweets that were retweeted (an important specification), the average number of retweets were *much higher* in 2020 than in 2021. An unpaired two sample t-test leads us to accept the one-sided alternative hypothesis (p<0.01) that the mean number of retweets on 30 Mar 2020 was substantially greater than the mean number of retweets on the same date in 2021. It seems that people were hitting the retweet button a lot more in the spring of 2020 than in 2021, which makes sense given that people were stuck at home in lockdown with a lot of novel happenings to discuss. Now, with vaccines being rolled out and coronavirus in decline, there is much less panic, anger, and dramatic attention being paid towards the virus.
 
 ### In each year, who was the worst at getting retweeted?
 
@@ -1575,8 +1646,8 @@ browsable(div(
   h2("2020", style = "width: 50%; font-family: sans-serif;"),
   h2("2021", style = "width: 50%; font-family: sans-serif;"),
   tags$br(),
-  div(HTML(worstrt20), style = "width: 50%;"),
-  div(HTML(worstrt21), style = "width: 50%;")
+  div(HTML(worstrt20), style = "width: 50%; border-collapse: separate; border-spacing: 10px; display:table-cell; padding:5px;"),
+  div(HTML(worstrt21), style = "width: 50%; border-collapse: separate; border-spacing: 10px; display:table-cell; padding:5px;")
 ))
 ```
 
@@ -1706,14 +1777,19 @@ cat(paste0("Average AFINN scores for all retweeted words by date\n",
 
 browsable(div(
   style = "display: flex; flex-wrap: wrap;",
-  p(rt_afinns, tags$br(), style = "width: 100%; font-family: sans-serif; border: dashed;")
+  p(rt_afinns, tags$br(), style = "width: 100%; font-family: sans-serif; border: dashed;"),
+  div(twenty_rts_afinn_table, style = "width: 50%; height:600px;"),
+  div(twentyone_rts_afinn_table, style = "width: 50%; height: 600px;"),
+  p(" ")
 ))
 ```
 
 
 ***
 
-The 2021 retweets appear to be more negatively valenced.
+The 2021 retweets appear to be more negatively valenced. 
+
+The most common word in each period is "death." It seems that this word is much more common among retweets than among original tweets. Perhaps, the topic is too heavy for people to feel compelled to write their own tweets about it but are willing to retweet others' words. "F***" is much more common in 2020 than in 2021. Perhaps this is because people were more panicked at the start of the pandemic.
 
 
 ### What textual features (sentiments and words) predict how viral a tweet became in 2020?
