@@ -10,6 +10,8 @@ output: flexdashboard::flex_dashboard
 </style>
 
 ```{r setup, include=FALSE}
+options(scipen = 999)
+
 library(flexdashboard)
 library(plotly)
 library(htmltools)
@@ -358,8 +360,7 @@ twenty_afinn_count[order(twenty_afinn_count$Count, decreasing = TRUE),]  -> twen
 twenty_afinn_count %>%  mutate(highlgt = ifelse(Value >= 1, "#65d69a", "#ff546b")) -> twenty_afinn_count
 
 twenty_afinn_title <- list(
-  family = "Arial Black",
-  size = 17)
+  size = 15)
 
 twenty_afinn_table <- plot_ly(
   type = 'table',
@@ -369,15 +370,15 @@ twenty_afinn_table <- plot_ly(
     align = c("center", "center"),
     line = list(width = 1, color = 'black'),
   #  fill = list(color = c("#1DA1F2","#1DA1F2")),
-    font = list(family = "Arial Black", size = 14.5, face = "bold")
+    font = list(size = 14)
   ),
   cells = list(
     values = rbind(as.character(twenty_afinn_count$Word), as.character(twenty_afinn_count$Count), twenty_afinn_count$Value),
     align = c("center", "center"),
     line = list(color = "black", width = 1),
-    font = list(family = "Arial", size = 13, color = c("black")),
+    font = list(size = 13, color = c("black")),
     fill = list(color = list(twenty_afinn_count$highlgt))
-  ))  %>%  layout(title = "30 Mar 2020 AFINN Scores By Word", font = twenty_afinn_title, margin = list(t = -8))
+  ))  %>%  layout(title = "2020 AFINN Scores By Word", font = twenty_afinn_title, margin = list(t = -8))
 
 
 twentyone_afinn <-    
@@ -400,8 +401,7 @@ twentyone_afinn_count[order(twentyone_afinn_count$Count, decreasing = TRUE),]  -
 twentyone_afinn_count %>%  mutate(highlgt = ifelse(Value >= 1, "#65d69a", "#ff546b")) -> twentyone_afinn_count
 
 twentyone_afinn_title <- list(
-  family = "Arial Black",
-  size = 17)
+  size = 15)
 
 twentyone_afinn_table <- plot_ly(
   type = 'table',
@@ -411,15 +411,15 @@ twentyone_afinn_table <- plot_ly(
     align = c("center", "center"),
     line = list(width = 1, color = 'black'),
   #  fill = list(color = c("#1DA1F2","#1DA1F2")),
-    font = list(family = "Arial Black", size = 14.5, face = "bold")
+    font = list(size = 14)
   ),
   cells = list(
     values = rbind(as.character(twentyone_afinn_count$Word), as.character(twentyone_afinn_count$Count), twentyone_afinn_count$Value),
     align = c("center", "center"),
     line = list(color = "black", width = 1),
-    font = list(family = "Arial", size = 13, color = c("black")),
+    font = list(size = 13, color = c("black")),
     fill = list(color = list(twentyone_afinn_count$highlgt))
-  ))  %>%  layout(title = "30 Mar 2021 AFINN Scores By Word", font = twentyone_afinn_title, margin = list(t = -8) )
+  ))  %>%  layout(title = "2021 AFINN Scores By Word", font = twentyone_afinn_title, margin = list(t = -8) )
 
 twenty_mean_afinn <- 
   twenty_afinn %>% 
@@ -966,7 +966,19 @@ h2("Methods")
 ```
 
 
-To examine the differences in sentiment between March 30, 2020 and March 31, 2021, we use sentiment analysis through text mining in R and use several methods to visualize and interpret the different aspects of the tweet, including length, content, and source. We use random forest model and backward stepwise regression to predict the virality of the tweets based on selected variables. We chose to use random forest as (1) it works well with both categorical and continuous values, (2) it reduces overfitting in decision trees, leading to a higher accuracy. Backward stepwise regression is chosen as (1) it is faster than other models, (2) it shows us the removed/added variables, providing valuable information about the quality of the predictor variables.
+To examine the differences in sentiment between March 30, 2020 and March 31, 2021, we use sentiment analysis through text mining in R and use several methods to visualize and interpret the different aspects of the tweet, including length, content, and source. We use random forests method and backward stepwise regression to predict the virality of the tweets based on selected variables. 
+
+We chose to use **random forests** as
+
+1. it works well with both categorical and continuous values
+
+2. it reduces overfitting in decision trees, leading to a higher accuracy
+
+**Backward stepwise regression** is chosen as 
+
+1. it is faster than other models 
+
+2. it shows us the removed/added variables, providing valuable information about the quality of the predictor variables.
 
 First, we used tidytext and transformed the dataset of COVID-19 related tweets and retweets for sentiment analysis. We manipulate the text with dplyr for further text analysis to determine the frequency of words in the tweets, tweet lengths, common hashtags, and mentions. To conduct further analyses, we use statistical methods to determine the significance in different mean tweet lengths.
 
@@ -1045,11 +1057,21 @@ The difference in mean tweet length is statistically significant, as p-value obt
 ### What differences do we observe in sentiments between the two periods?
 
 ```{r}
+sent1 <-
+  HTML(ggplot_image(twenty_sentiment_analysis3, height = px(500))) 
+
+sent2 <-
+  HTML(ggplot_image(twentyone_sentiment_analysis3, height = px(500))) 
+
 browsable(div(
   style = "display: flex; flex-wrap: wrap; justify-content: center",
   div(graph3, style = "width: 50%;"),
+  div(graph4, style = "width: 50%;"),
+  p(" ", style = "width: 100%;"),
   tags$br(),
-  div(graph4, style = "width: 50%;")
+  div(sent1, style = "width: 50%;"),
+  div(sent2, style = "width: 50%;"),
+  p(" ")
 ))
 ```
 
@@ -1061,19 +1083,7 @@ We produce visualizations comparing the sentiments being expressed in each sampl
 
 Compared to our 2020 tweets, the 2021 tweets express less trust, less surprise, less joy, less disgust, less anticipation, and less anger, but more sadness, more fear, and more positivity,
 
-
-### What words are associated with the different sentiments between the two periods?
-
-```{r }
-HTML(ggplot_image(twenty_sentiment_analysis3, height = px(650))) 
-
-HTML(ggplot_image(twentyone_sentiment_analysis3, height = px(650))) 
-
-```
-
-***
-
-Looking at both the 2020 and 2021 sentiments, we can see that the word "pandemic" has beenmost used, but with different frequency. In 2021, other words started to gain in similar popularity as the word "pandemic", with negatively valenced words such as "bad" and "shit", and positively valenced words such as "hope" and "love". This is interesting to note because it demonstrates that after a year, people are exhibiting heightened emotions, most likely from exhaustion in dealing with the pandemic. These sentiments indicate people's expression when it comes to coping with the pandemic.
+Looking at the specific words underlying the 2020 and 2021 sentiments, we can see that the word "pandemic" has been most used but with a different frequency in each sample period. In 2021, other negatively valenced words such as "bad" and "sh*t" words became more common, as did positively valenced words such as "hope" and "love". This is interesting because it demonstrates that after a year, people seem to be more expressive, likely from the fallout and exhaustion of the previous year.
 
 
 ### How positive vs. negative are the tweets from each year?
@@ -1089,9 +1099,8 @@ cat(paste0("Average AFINN scores for all words by date\n",
 browsable(div(
   style = "display: flex; flex-wrap: wrap; justify-content: center;",
   div(twenty_afinn_table, style = "width: 50%; height:600px;"),
-  tags$br(),
   div(twentyone_afinn_table, style = "width: 50%; height: 600px;"),
-  p("---")
+  p(" ")
 ))
 
 ```
@@ -1108,18 +1117,18 @@ In 2020, the word "support" had the most frequency and is positively valenced, w
 
 ```{r}
 key <- 
-  kbl(terms(tmod_twenty, 20) %>% as.data.frame(), booktabs = T) %>% 
+  kbl(terms(tmod_twenty, 20) %>% as.data.frame(), booktabs = T, digits = 2) %>% 
   kable_styling()
 
 freq <- 
-  kbl(table(twenty_dfm$topic))
+  kbl(table(twenty_dfm$topic), booktabs = T, digits = 2) %>% kable_styling()
 
 browsable(div(
-  h2("Topic Key", style = "font-family: sans-serif"),
+  h2("2020 Topic Key", style = "font-family: sans-serif"),
   div(HTML(key), style = "width: 100%;"),
   tags$br(),
   h2("Frequency", style = "font-family: sans-serif"),
-  div(HTML(freq), style = "width: 100%;")
+  div(HTML(freq), style = "width: 50%;")
 ))
 ```
 
@@ -1156,18 +1165,18 @@ Topic 10 seems to focus on things people are doing at home while quarantining---
 
 ```{r}
 key <- 
-  kbl(terms(tmod_twentyone, 20) %>% as.data.frame(), booktabs = T) %>% 
+  kbl(terms(tmod_twentyone, 20) %>% as.data.frame(), booktabs = T, digits = 2) %>% 
   kable_styling()
 
 freq <- 
-  kbl(table(twentyone_dfm$topic)) %>% kable_styling()
+  kbl(table(twentyone_dfm$topic), booktabs = T, digits = 2) %>% kable_styling()
 
 browsable(div(
-  h2("Topic Key", style = "font-family: sans-serif"),
+  h2("2021 Topic Key", style = "width: 100%; font-family: sans-serif"),
   div(HTML(key), style = "width: 100%;"),
   tags$br(),
-  h2("Frequency", style = "font-family: sans-serif"),
-  div(HTML(freq), style = "width: 100%;")
+  h2("Frequency", style = "width: 100%; font-family: sans-serif"),
+  div(HTML(freq), style = "width: 50%;")
 ))
 ```
 
@@ -1200,11 +1209,11 @@ Topic 10 is the emotional topic, with angry curse words and words like "love," "
 
 ```{r}
 hashtags20 <-
-  kbl(head(tstat_freq_twenty, 20), booktabs = T) %>% 
+  kbl(head(tstat_freq_twenty, 20, digits = 2), booktabs = T) %>% 
   kable_styling()
 
 hashtags21 <-
-  kbl(head(tstat_freq_twentyone, 20), booktabs = T) %>% 
+  kbl(head(tstat_freq_twentyone, 20, digits = 2), booktabs = T) %>% 
   kable_styling()
 
 browsable(div(
@@ -1255,10 +1264,10 @@ ggplot(dat_country21, aes(map_id = id)) +
 browsable(div(
   style = "display: flex; flex-wrap: wrap;",
   div(ggplotly(cntrymentions20), style = "width: 50%;"),
-  div(ggplotly(cntrymentions21), tags$br(), style = "width: 50%;"),
-  div(HTML(ggplot_image(cntryplot20, height = px(600))), style = "width: 50%; justify-content: center;"),
-  div(HTML(ggplot_image(cntryplot21, height = px(600))), style = "width: 50%; justify-content: center;"),
-  p('---')
+  div(ggplotly(cntrymentions21), style = "width: 50%;"),
+  div(HTML(ggplot_image(cntryplot20, height = px(500))), style = "width: 50%; justify-content: center;"),
+  div(HTML(ggplot_image(cntryplot21, height = px(500))), style = "width: 50%; justify-content: center;"),
+  p(' ')
 ))
 ```
 
@@ -1515,14 +1524,16 @@ twenty_rts %>% group_by(ScreenName) %>%
   summarize(Followers = mean(Followers), Retweets = sum(Retweets)) %>% 
   left_join(twenty_uqtweets %>% 
               filter(n>1), by = c('ScreenName')) %>% 
-  mutate(rt_index = (Retweets/n)/Followers) %>% arrange(rt_index) %>% head(10) %>% 
+  mutate(`rt_index*1e7` = ((Retweets/n)/Followers) * 10000000) %>% 
+  arrange(rt_index) %>% head(10) %>% 
   kbl(booktabs = T) %>% kable_styling() -> worstrt20
 
 twentyone_rts %>% group_by(ScreenName) %>%
   summarize(Followers = mean(Followers), Retweets = sum(Retweets)) %>% 
   left_join(twenty_uqtweets %>% 
               filter(n>1), by = c('ScreenName')) %>% 
-  mutate(rt_index = (Retweets/n)/Followers) %>% arrange(rt_index) %>% head(10) %>% 
+  mutate(`rt_index*1e7` = ((Retweets/n)/Followers) * 10000000) %>% 
+  arrange(rt_index) %>% head(10) %>% 
   kbl(booktabs = T) %>% kable_styling() -> worstrt21
 
 browsable(div(
@@ -1593,9 +1604,9 @@ writeLines(c(paste0("30 Mar 2020 Mean Retweeted Tweet Length: ",
   paste(collapse = "<br>") %>% 
   HTML() -> rt_lengths
 
-ggplot(data = twenty_rts_wordcounts, aes(x = tweetLength)) + geom_histogram(fill="firebrick") + ggtitle("30 Mar 2020 - Histogram of Tweet Length") -> rtlength20
+ggplot(data = twenty_rts_wordcounts, aes(x = tweetLength)) + geom_histogram(fill="firebrick", color = "firebrick") + ggtitle("30 Mar 2020 - Histogram of Tweet Length") -> rtlength20
 
-ggplot(data = twentyone_rts_wordcounts, aes(x = tweetLength)) + geom_histogram(fill="firebrick") + ggtitle("30 Mar 2021 - Histogram of Tweet Length") -> rtlength21
+ggplot(data = twentyone_rts_wordcounts, aes(x = tweetLength)) + geom_histogram(fill="firebrick", color = "firebrick") + ggtitle("30 Mar 2021 - Histogram of Tweet Length") -> rtlength21
 
 browsable(div(
   style = "display: flex; flex-wrap: wrap;",
